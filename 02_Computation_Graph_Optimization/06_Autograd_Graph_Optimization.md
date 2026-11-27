@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![PyTorch autograd computation graph](https://bkkhyunn.github.io/assets/images/Pytorch/diagram6.png)
+![06_Autograd_Graph_Optimization 可视化](../images/02_Computation_Graph_Optimization/06_Autograd_Graph_Optimization.svg)
+
+*相关成熟资料：PyTorch Autograd 计算图学习资料，详见[原始链接](https://bkkhyunn.github.io/deep_learning/torch/torch_5/)。*
 
 *图源：PyTorch Autograd 学习笔记。展示叶子张量、前向运算节点、saved tensors 与反向节点之间的依赖关系。参见[原始说明](https://bkkhyunn.github.io/deep_learning/torch/torch_5/)。*
 
