@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![05_Pipeline_Parallelism 可视化](../images/04_Parallelism_Optimization/05_Pipeline_Parallelism.svg)
+
+*图：微批次沿模型阶段流水执行，不同设备同时处理不同微批次；填充和排空阶段产生流水线气泡。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![流水线并行时间线](../images/04_Parallelism_Optimization/05_Pipeline_Parallelism.svg)
 
 *图：不同模型阶段分配给不同设备；微批次依次经过各阶段。启动和收尾阶段存在部分设备空闲，即流水线气泡。*
