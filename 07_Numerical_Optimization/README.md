@@ -8,13 +8,13 @@
 
 | 编号 | 专题 | 状态 |
 |---:|---|---|
-| 1 | [浮点数基础](01_Floating_Point_Fundamentals.md) | 待共同设计 |
-| 2 | [数值误差](02_Numerical_Error.md) | 待共同设计 |
-| 3 | [混合精度](03_Mixed_Precision.md) | 待共同设计 |
-| 4 | [量化](04_Quantization.md) | 待共同设计 |
-| 5 | [误差补偿](05_Error_Compensation.md) | 待共同设计 |
-| 6 | [数值稳定性](06_Numerical_Stability.md) | 待共同设计 |
-| 7 | [精度验证](07_Precision_Validation.md) | 待共同设计 |
+| 1 | [浮点数基础](01_Floating_Point_Fundamentals.md) | 已建立初稿 |
+| 2 | [数值误差](02_Numerical_Error.md) | 已建立初稿 |
+| 3 | [混合精度](03_Mixed_Precision.md) | 已建立初稿 |
+| 4 | [量化](04_Quantization.md) | 已建立初稿 |
+| 5 | [误差补偿](05_Error_Compensation.md) | 已建立初稿 |
+| 6 | [数值稳定性](06_Numerical_Stability.md) | 已建立初稿 |
+| 7 | [精度验证](07_Precision_Validation.md) | 已建立初稿 |
 
 ## 统一专题写作与可视化规范
 
