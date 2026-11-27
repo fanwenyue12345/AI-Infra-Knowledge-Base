@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![AllReduce 多设备归约](../images/08_System_Optimization/03_AllReduce.svg)
 
-*图：各 GPU 持有本地向量，先按元素求和，再将完整求和结果提供给所有 GPU。实际实现可能采用 Ring、Tree 或分层算法。*
 
 ### 2.2 数学原理与核心技术
 
