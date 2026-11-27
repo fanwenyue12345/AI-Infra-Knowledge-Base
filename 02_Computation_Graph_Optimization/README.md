@@ -2,18 +2,18 @@
 
 **Computation Graph Optimization**
 
-本目录用于系统学习和研究02 计算图优化。本阶段先建立专题目录与文档入口；每篇的具体内容、深度和案例由后续逐项讨论确定。
+本目录研究如何分析和变换计算依赖图，以消除冗余、融合操作、删除无用计算，并优化自动微分的执行与内存管理。六篇专题已建立第一轮内容初稿。
 
 ## 专题索引
 
 | 编号 | 专题 | 状态 |
 |---:|---|---|
-| 01 | [计算图基础](01_Computation_Graph_Fundamentals.md) | 待共同设计 |
-| 02 | [算子融合](02_Operator_Fusion.md) | 待共同设计 |
-| 03 | [公共子表达式消除（CSE）](03_Common_Subexpression_Elimination.md) | 待共同设计 |
-| 04 | [死代码消除](04_Dead_Code_Elimination.md) | 待共同设计 |
-| 05 | [重计算](05_Recomputation.md) | 待共同设计 |
-| 06 | [自动微分图优化](06_Autograd_Graph_Optimization.md) | 待共同设计 |
+| 01 | [计算图基础](01_Computation_Graph_Fundamentals.md) | 已建立初稿 |
+| 02 | [算子融合](02_Operator_Fusion.md) | 已建立初稿 |
+| 03 | [公共子表达式消除（CSE）](03_Common_Subexpression_Elimination.md) | 已建立初稿 |
+| 04 | [死代码消除](04_Dead_Code_Elimination.md) | 已建立初稿 |
+| 05 | [重计算](05_Recomputation.md) | 已建立初稿 |
+| 06 | [自动微分图优化](06_Autograd_Graph_Optimization.md) | 已建立初稿 |
 
 ## 统一专题写作与可视化规范
 
