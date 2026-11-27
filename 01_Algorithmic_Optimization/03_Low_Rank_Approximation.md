@@ -25,7 +25,7 @@ flowchart LR
 保留的秩 $r$ 越小，压缩通常越强，但近似误差通常也越大。需要结合奇异值谱和任务容差选择 $r$。
 
 
-对矩阵 (A\in\mathbb R^{m\times n})，奇异值分解为：
+对矩阵 $A\in\mathbb R^{m\times n}$，奇异值分解为：
 
 $$
 A=U\Sigma V^T.
