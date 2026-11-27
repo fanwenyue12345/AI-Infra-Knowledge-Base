@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![04_Tensor_Parallelism 可视化](../images/04_Parallelism_Optimization/04_Tensor_Parallelism.svg)
+
+*图：列切分让设备产生不同输出分片；行切分产生局部部分和，需要归约组合。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![张量并行矩阵切分](../images/04_Parallelism_Optimization/04_Tensor_Parallelism.svg)
 
 *图：矩阵乘法按输出列切分时，各设备计算局部输出列；按输入维度切分时，各设备计算局部部分和，通常需要归约通信。*
