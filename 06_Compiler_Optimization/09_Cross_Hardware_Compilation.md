@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![09_Cross_Hardware_Compilation 可视化](../images/06_Compiler_Optimization/09_Cross_Hardware_Compilation.svg)
+
+*图：统一 IR 经过不同目标后端映射到不同 ISA 和硬件；可移植不意味着性能或浮点结果完全一致。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![跨硬件编译](../images/06_Compiler_Optimization/09_Cross_Hardware_Compilation.svg)
 
 *图：统一的计算表示经过不同目标后端，分别映射到 NVIDIA GPU、AMD GPU、CPU 或其他加速器。后端需要处理不同 ISA、内存模型和硬件能力。*
