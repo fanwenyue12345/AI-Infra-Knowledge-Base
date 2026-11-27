@@ -8,55 +8,51 @@
 
 **一句话定义：** Layout Transformation 是改变张量元素在内存地址、线程、Warp、寄存器或共享内存之间的映射方式，以适应目标计算和硬件访问模式的变换。
 
-**核心目的：** 让数据布局与线程访问、向量化、矩阵指令和存储层级相匹配，减少不合并访存、跨线程交换和不必要的数据重排。逻辑张量形状可以保持不变，但其物理存储或线程分布发生变化。
+**核心目的：** 让数据布局与线程访问、向量化、矩阵指令和内存层级匹配，减少不合并访问、Bank Conflict 和额外数据重排。布局不仅是张量在内存中的形状，还包括元素由哪些线程持有、如何分布到寄存器和片上存储。
 
 ## 02. 数学原理与核心技术
 
 ### 2.1 可视化理解
 
-![06_Layout_Transformation 可视化](../images/06_Compiler_Optimization/06_Layout_Transformation.svg)
-
-*图：逻辑矩阵相同，但行主序和列主序的地址映射不同；GPU 还需要决定元素由哪个线程持有。*
-
-### 2.2 数学原理与核心技术
-
-### 2.1 可视化理解
-
 ![Layout Transformation](../images/06_Compiler_Optimization/06_Layout_Transformation.svg)
 
-*图：同一逻辑矩阵可按行主序或列主序存储，也可按不同线程布局分配元素。逻辑索引不变，物理地址与线程所有权改变。*
+*图：同一逻辑矩阵可采用不同物理地址顺序，也可分配给不同线程。逻辑索引不变，但线程持有关系和访存连续性会改变。*
 
 ### 2.2 数学原理与核心技术
 
-对于二维张量 $A\in\mathbb R^{M\times N}$，行主序（Row-major）下元素地址可写为：
+逻辑张量索引到线性内存地址的映射可写为：
 
 $$
-addr(A_{ij})=base+(iN+j)s,
+\operatorname{addr}(i_0,\ldots,i_{n-1})
+=
+base+\sum_{k=0}^{n-1}i_k s_k,
 $$
 
-其中 $s$ 是元素字节数。列主序（Column-major）下：
+其中 $s_k$ 是对应维度的 stride。对于连续行优先矩阵 $A\in\mathbb R^{M\times N}$，地址偏移为：
 
 $$
-addr(A_{ij})=base+(jM+i)s.
+offset(i,j)=iN+j.
 $$
 
-逻辑元素 $A_{ij}$ 相同，但地址映射不同。GPU 编译器还需要决定每个元素由哪个线程持有，以及是否需要在 Warp 或 Block 内交换数据。
+转置视图的逻辑索引不变，但 stride 会交换；若直接按不合适的线程方向读取，就可能导致非合并访存。
 
 **核心技术：**
-- **Memory Layout：** 行主序、列主序、Blocked/Tiled 等内存布局。
-- **Thread Layout：** 将逻辑张量元素映射到线程、Warp 和寄存器。
-- **Swizzle：** 通过特定索引重排改善 Bank、缓存或访存模式。
-- **Transpose / Permutation：** 改变维度顺序或元素排列。
-- **Layout Conversion：** 在不同线程或存储布局之间搬运数据，可能需要 Shuffle、Shared Memory 或全局内存重排。
-- **Vectorization Alignment：** 让连续元素布局满足向量加载和硬件矩阵指令要求。
+- **Stride / Contiguous Layout：** 描述逻辑维度与物理地址之间的步长关系。
+- **Thread Layout：** 决定每个线程负责哪些逻辑元素。
+- **Warp Layout：** 决定 Warp 内各 Lane 对应的数据索引。
+- **Blocked Layout：** 将连续数据块分配给线程组，改善合并访问与局部性。
+- **Swizzle：** 对地址或 Tile 顺序做置换，缓解 Bank Conflict 或改善硬件访问。
+- **Layout Conversion：** 在寄存器、Shared Memory 和全局内存布局之间转换，可能需要数据搬运或同步。
 
-布局变换可能引入真实数据搬运，因此不能只看索引表达式是否更简单。需要判断变换是否能减少后续访存、提升指令效率，且搬运成本是否值得。
+布局变换可能提高访存效率，也可能引入额外的数据重排成本。必须结合消费者算子、数据复用、硬件指令要求和整体数据流选择布局。
 
 ## 03. 代表案例
 
 | 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
 |---|---|---|---|
-| Triton | **直接案例：** 通过 blocked layout 和编译器布局转换映射张量元素到线程 | BlockedLayout、SliceConfig、convert_layout | [GitHub](https://github.com/triton-lang/triton) |
-| CUTLASS | **直接案例：** 为 GEMM 定义线程、Warp 和矩阵片段的数据布局 | TensorRef、Layout、TensorOp multiplicand layout | [GitHub](https://github.com/NVIDIA/cutlass) |
-| MLIR GPU / NVGPU Dialects | **直接案例：** 表示 GPU 分布式张量布局和硬件相关操作 | GPU mapping、NVGPU、layout conversion | [MLIR 文档](https://mlir.llvm.org/) |
-| TVM TensorIR | **关联案例：** 通过数据布局和调度变换改变张量访问方式 | layout transform、schedule、buffer access | [GitHub](https://github.com/apache/tvm) |
+| Triton | **直接案例：** 显式描述张量元素在线程和 Warp 中的分布 | blocked layout、slice layout、convert_layout | [GitHub](https://github.com/triton-lang/triton) · [文档](https://triton-lang.org/main/) |
+| CUTLASS | **直接案例：** 通过 TensorRef、Tile 与线程布局组织矩阵数据 | layout、threadblock swizzle、tensor memory | [GitHub](https://github.com/NVIDIA/cutlass) |
+| MLIR GPU / Linalg | **直接案例：** 在 IR 中表示并变换张量与设备数据布局 | affine maps、memref layout、GPU mapping | [MLIR 文档](https://mlir.llvm.org/) |
+| TVM | **直接案例：** 通过 TensorIR 与调度变换改变循环和数据访问布局 | layout transform、cache_read/write、reorder | [GitHub](https://github.com/apache/tvm) |
+
+学习 Triton 时，建议把同一个二维 Tile 的逻辑索引、Lane 分配和最终访存地址画在一起，理解 layout 不只是 shape。
