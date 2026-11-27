@@ -43,17 +43,15 @@
 | 07 数值精度优化 | [07_Numerical_Optimization](07_Numerical_Optimization/README.md) |
 | 08 系统与分布式优化 | [08_System_Optimization](08_System_Optimization/README.md) |
 
-## 专题文档统一结构
+## 二级专题统一结构
 
-1. 快速理解
-2. 背景与问题
-3. 核心原理与理论基础
-4. 工程实现
-5. 经典项目与案例
-6. 实验与性能验证
-7. 我们的理解与研究问题
+所有专题固定为三个一级章节：
 
-专题索引负责导航，专题 MD 负责深入学习，项目档案负责记录具体开源项目；个人理解和研究假设单独记录，避免重复内容。
+1. 一句话定义与核心目的
+2. 数学原理与核心技术
+3. 代表案例
+
+数学和工程概念采用匹配知识点的真实可视化；公式统一使用 GitHub 支持的 `$...$` 与 `$$...$$` 格式。Mermaid 仅用于流程或依赖关系图。完整规范见 [DOCUMENTATION_STANDARD.md](DOCUMENTATION_STANDARD.md)。
 
 ## 记录原则
 
