@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![GPU Profiler 分析维度](../images/05_Kernel_Optimization/09_Profiling.svg)
 
-*图：性能分析从端到端时间线定位目标 Kernel，再查看 Kernel 内部的计算、内存、Warp 和资源指标。先定位问题，再选择适当的细粒度分析工具。*
 
 ### 2.2 数学原理与核心技术
 
