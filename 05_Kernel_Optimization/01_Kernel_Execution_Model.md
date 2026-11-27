@@ -1,39 +1,55 @@
 # Kernel 执行模型
 
-- **所属分类：** [05 Kernel 优化](README.md)
-- **专题编号：** 01
-- **状态：** 待共同设计与编写
+**所属分类：** [05 Kernel 优化](README.md)  
+**英文名称：** GPU Kernel Execution Model  
+**专题编号：** 01
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** GPU Kernel 执行模型描述一个 Kernel 从主机端启动后，如何由设备端线程组织成 Grid、Block 和 Warp，并由 GPU 硬件调度执行。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 建立从程序代码到硬件执行的对应关系，理解 Kernel Launch、线程索引、资源分配和执行调度，为判断并行度、访存效率和性能瓶颈提供基础。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![Kernel 执行模型](../images/05_Kernel_Optimization/01_Kernel_Execution_Model.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：Host 发起 Kernel Launch，Grid 包含多个 Block，Block 被调度到 SM，Block 内线程组成 Warp 执行指令。具体调度和驻留数量由硬件资源决定。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、硬件机制、实现流程和关键参数。
+以一维向量加法为例：
 
-## 5. 经典项目与案例
+$$
+C_i=A_i+B_i.
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+CUDA 中常见的全局线程索引为：
 
-## 6. 实验与性能验证
+$$
+i=\text{blockIdx.x}\cdot\text{blockDim.x}+\text{threadIdx.x}.
+$$
 
-待讨论：验证方法、指标、测试条件和结果解释。
+若每个线程处理一个元素，线程总数通常需要覆盖 $N$ 个元素，并通过边界判断处理最后一个不完整 Block。
 
-## 7. 我们的理解与研究问题
+**核心技术与概念：**
+- **Kernel Launch：** Host 端配置执行网格并启动设备端函数。
+- **Grid：** 一次 Kernel Launch 中所有 Block 的集合。
+- **Block / CTA：** 可协作的线程集合，Block 内线程可使用 Shared Memory 和同步机制。
+- **Warp：** 硬件调度执行的线程组；NVIDIA GPU 通常为 32 个线程。
+- **SM：** 执行 Block/CTA 并调度 Warp 的硬件处理单元。
+- **Thread Indexing：** 将线程索引映射到数据元素或任务。
+- **Bounds Checking：** 处理任务数量不能被 Block 大小整除的边界。
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+Kernel 执行模型是逻辑组织与硬件调度的抽象，不意味着一个 Block 永久绑定某个 SM，也不意味着 Grid 中所有 Block 同时驻留。Block 会在资源允许时分批调度执行。
 
-## 参考资料
+## 03. 代表案例
 
-待补充：优先使用原始论文、官方文档和项目源码。
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| CUDA Samples | **直接案例：** 展示 Kernel Launch、索引和线程组织 | vectorAdd、reduction、matrixMul | [GitHub](https://github.com/NVIDIA/cuda-samples) |
+| CUDA Programming Guide | **权威资料：** 定义 CUDA 执行模型与线程层级 | thread hierarchy、execution configuration | [官方文档](https://docs.nvidia.com/cuda/cuda-c-programming-guide/) |
+| Triton | **直接案例：** 用 program instance 与 block 抽象组织 GPU 工作 | program_id、num_warps、launch grid | [GitHub](https://github.com/triton-lang/triton) · [文档](https://triton-lang.org/main/) |
+| HIP | **关联案例：** 提供 AMD GPU 的异构 Kernel 编程模型 | grid、work-group、wavefront | [GitHub](https://github.com/ROCm/HIP) |
