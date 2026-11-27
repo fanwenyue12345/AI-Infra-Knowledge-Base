@@ -16,7 +16,7 @@
 
 ![04_Sparse_Computation 可视化](../images/01_Algorithmic_Optimization/04_Sparse_Computation.svg)
 
-*图：左侧用蓝色单元标出 4×4 矩阵的非零元素；中间列出其坐标和值；右侧给出 COO 的 row、col、data 三个数组。该例有 3 个非零值，稀疏格式还需要额外索引存储。*
+*图：左侧用蓝色单元标出 4×4 矩阵的非零元素；中间列出其行、列坐标和值；右侧给出 COO 的 row、col、data 三个数组。该例有 3 个非零值，稀疏格式还需要额外索引存储。*
 
 ### 2.2 数学原理与核心技术
 
