@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![02_Intermediate_Representation 可视化](../images/06_Compiler_Optimization/02_Intermediate_Representation.svg)
+
+*图：同一矩阵计算可以在高层表示为 MatMul，在中层表示为循环，在低层表示为地址计算、Load、乘加和 Store。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![IR 层级表示](../images/06_Compiler_Optimization/02_Intermediate_Representation.svg)
 
 *图：同一计算可以先以高层张量操作表示，再降低为循环和内存操作，最后变成接近机器指令的低层 IR。不同 IR 保留的信息和可优化范围不同。*
