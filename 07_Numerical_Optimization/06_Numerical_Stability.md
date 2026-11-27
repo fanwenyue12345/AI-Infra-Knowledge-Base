@@ -6,58 +6,54 @@
 
 ## 01. 一句话定义与核心目的
 
-**一句话定义：** 数值稳定性描述一个算法在有限精度计算中对舍入误差和扰动的控制能力，即计算误差是否会被算法过程过度放大。
+**一句话定义：** 数值稳定性描述数值算法在有限精度计算和输入扰动下，是否能产生与原问题精确解保持合理接近的结果。
 
-**核心目的：** 让算法在真实浮点硬件上仍能得到可信结果，避免理论上正确的公式因溢出、下溢、消去误差或误差累积而产生严重偏差。稳定算法尤其重要于深度学习、线性代数、科学仿真和迭代求解。
+**核心目的：** 避免算法把微小舍入误差放大成显著结果偏差，保证计算在不同数据规模、输入范围和精度设置下可靠。稳定性关注算法如何处理误差；条件数则描述问题本身对输入扰动的敏感程度。
 
 ## 02. 数学原理与核心技术
 
 ### 2.1 可视化理解
 
-![稳定 Softmax 可视化](../images/07_Numerical_Optimization/06_Numerical_Stability.svg)
+![数值稳定性对比](../images/07_Numerical_Optimization/06_Numerical_Stability.svg)
 
-*图：Softmax 的数学结果在所有输入同时减去同一个常数后保持不变。先减去最大值可使指数输入不大于零，避免大正数指数导致溢出。*
+*图：稳定算法中误差增长受到控制；不稳定计算可能放大舍入扰动。示意图强调误差趋势，实际稳定性需针对具体算法和问题分析。*
 
 ### 2.2 数学原理与核心技术
 
-以 Softmax 为例：
+对问题 $y=f(x)$，输入扰动 $\Delta x$ 引起输出扰动 $\Delta y$。局部相对敏感程度可由条件数刻画：
 
 $$
-\operatorname{softmax}(x_i)=
-\frac{e^{x_i}}{\sum_j e^{x_j}}
+\kappa_f(x)
+\approx
+\left|\frac{x f'(x)}{f(x)}\right|.
 $$
 
-当输入包含很大的正数时，直接计算 $e^{x_i}$ 可能溢出。令：
+条件数大表示问题本身对输入误差敏感；即使使用稳定算法，也可能无法消除问题固有的敏感性。
+
+**Backward Stability（后向稳定性）** 是分析算法稳定性的核心概念之一：计算结果 $\hat{y}$ 可以看作某个轻微扰动后问题的精确解。对于线性方程组 $Ax=b$，若计算结果满足：
 
 $$
-m=\max_j x_j
+(A+\Delta A)\hat{x}=b+\Delta b,
 $$
 
-利用指数的平移性质：
+且 $\Delta A$、$\Delta b$ 相对较小，则算法在后向意义上稳定。前向误差还会受到问题条件数影响。
 
-$$
-\operatorname{softmax}(x_i)=
-\frac{e^{x_i-m}}{\sum_j e^{x_j-m}}
-$$
+**核心技术与概念：**
+- **Condition Number：** 衡量问题对输入扰动的敏感性。
+- **Forward Error：** 计算结果与精确解之间的差异。
+- **Backward Error：** 使计算结果成为精确解所需的最小问题扰动。
+- **Stable Reformulation：** 用数值更稳健的等价表达替换容易发生消去或溢出的表达。
+- **Scaling / Normalization：** 调整变量和方程尺度，改善数值范围与条件。
+- **Stable Reduction：** 采用 Pairwise Summation、补偿求和等方法降低累积误差。
+- **Pivoting：** 在线性求解中通过选主元改善数值行为。
 
-因为 $x_i-m\le 0$，指数项不会因大正输入而溢出。这是数学等价但数值更稳定的计算形式。
-
-**核心技术：**
-
-- **Stable Reformulation：** 用数学等价但数值更稳定的表达式计算，例如 log-sum-exp、稳定 Softmax。
-- **Scaling / Normalization：** 在合适位置缩放数据，避免中间量超出可表示范围。
-- **Pivoting：** 在线性方程求解和矩阵分解中选择合适主元，降低误差放大风险。
-- **Conditioning Awareness：** 识别问题本身是否病态，避免把问题敏感性误判为算法实现错误。
-- **Stable Reduction：** 选择合理的归约顺序、累加精度或补偿策略。
-- **Regularization：** 在病态问题或反问题中引入约束，改善问题条件，但会改变原问题或引入偏差。
-
-需要区分稳定性与精度：稳定算法对舍入误差控制较好，但若问题本身高度病态，结果仍可能对输入扰动敏感；反之，某次计算误差较小也不能单独证明算法稳定。
+一个重要区别是：病态问题不等于算法不稳定；问题条件数高时，输入微小变化就可能导致解显著变化。应同时分析问题条件和算法稳定性。
 
 ## 03. 代表案例
 
 | 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
 |---|---|---|---|
-| LAPACK | **直接案例：** 数值线性代数库大量算法围绕稳定分解、主元选择和误差控制设计 | LU with pivoting、QR、SVD、误差估计 | [GitHub](https://github.com/Reference-LAPACK/lapack) |
-| PyTorch | **直接案例：** 提供数值稳定的算子实现与数值精度说明 | Softmax、LogSumExp、归约精度与数值测试 | [GitHub](https://github.com/pytorch/pytorch) · [Numerical Accuracy](https://docs.pytorch.org/docs/stable/notes/numerical_accuracy.html) |
-| SciPy | **直接案例：** 科学计算算法库，提供稳定的线性代数、特殊函数和优化实现 | 线性代数、数值积分、特殊函数 | [GitHub](https://github.com/scipy/scipy) · [文档](https://docs.scipy.org/doc/scipy/) |
-| Higham, *Accuracy and Stability of Numerical Algorithms* | **经典理论参考：** 系统讨论稳定算法、条件数和误差分析 | Backward Stability、Forward Error、Condition Number | [SIAM 图书](https://epubs.siam.org/doi/book/10.1137/1.9780898718027) |
+| LAPACK | **经典直接案例：** 提供经过数值分析设计的线性代数算法 | pivoting、factorization、condition estimation | [GitHub](https://github.com/Reference-LAPACK/lapack) |
+| Higham《Accuracy and Stability》 | **经典理论资料：** 系统讨论条件数、前向/后向误差与算法稳定性 | backward stability、conditioning | [SIAM 图书](https://epubs.siam.org/doi/book/10.1137/1.9780898718027) |
+| NumPy / SciPy | **直接案例：** 提供稳定的线性代数与数值计算接口 | linalg.solve、cond、SVD | [NumPy](https://github.com/numpy/numpy) · [SciPy](https://github.com/scipy/scipy) |
+| cuSOLVER | **直接案例：** GPU 线性代数求解器，包含分解、求解和条件估计工具 | factorization、solver、iterative refinement | [官方文档](https://docs.nvidia.com/cuda/cusolver/) |
