@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![05_Compiler_Operator_Fusion 可视化](../images/06_Compiler_Optimization/05_Compiler_Operator_Fusion.svg)
+
+*图：编译器根据依赖、合法性和成本模型识别融合区域，将多个操作合并为更少的执行单元；过度融合可能增加资源压力。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![编译器算子融合](../images/06_Compiler_Optimization/05_Compiler_Operator_Fusion.svg)
 
 *图：图优化器把连续的加法、偏置和激活组合成一个执行区域，避免中间张量写回显存；融合边界仍受依赖、资源和算子语义限制。*
