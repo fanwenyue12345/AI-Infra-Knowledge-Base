@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![09_Cross_Hardware_Compilation 可视化](../images/06_Compiler_Optimization/09_Cross_Hardware_Compilation.svg)
+
+*图：共享前端或 IR 通过不同后端连接 CPU、NVIDIA GPU、AMD GPU 和 NPU；各目标仍需专用 Lowering、代码生成和验证。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![跨硬件编译架构](../images/06_Compiler_Optimization/09_Cross_Hardware_Compilation.svg)
 
 *图：共享前端和中间表示连接多个硬件后端；每个后端负责目标相关 Lowering、代码生成和运行时集成。不同设备仍可能需要专门的算子实现与调优。*
