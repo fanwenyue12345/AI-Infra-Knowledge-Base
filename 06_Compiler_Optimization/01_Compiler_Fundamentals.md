@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![01_Compiler_Fundamentals 可视化](../images/06_Compiler_Optimization/01_Compiler_Fundamentals.svg)
+
+*图：源程序经过前端分析形成 IR，再经过优化与 Lowering，最后生成目标平台代码。真实编译器通常包含多轮 IR 转换。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![编译器基本过程](../images/06_Compiler_Optimization/01_Compiler_Fundamentals.svg)
 
 *图：源程序经过前端分析形成中间表示，再经优化与目标代码生成，最终由目标平台执行。真实编译器可能有多个 IR 和多轮优化，流程并非严格单向。*
