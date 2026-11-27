@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![02_GPU_Parallelism 可视化](../images/04_Parallelism_Optimization/02_GPU_Parallelism.svg)
+
+*图：展示 GPU、SM 与线程块/CTA 的组织关系。硬件将线程块调度到可用 SM，Warp 是 NVIDIA GPU 的基本调度执行组。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![GPU 线程层级与并行映射](../images/04_Parallelism_Optimization/02_GPU_Parallelism.svg)
 
 *图：程序中的线程组织为 Block/CTA，再由硬件调度到 SM；一个 Warp 中的线程以 SIMT 方式协同执行。具体资源与调度规则依 GPU 架构而异。*
