@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![01_CUDA_Graph 可视化](../images/08_System_Optimization/01_CUDA_Graph.svg)
+
+*图：传统方式由 CPU 逐个提交多个 GPU 操作；CUDA Graph 捕获操作及依赖后，通过一次 Graph Launch 重放整张执行图，降低重复提交开销。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![CUDA Graph 执行图](../images/08_System_Optimization/01_CUDA_Graph.svg)
 
 *图：传统方式由 CPU 逐个提交多个 GPU 操作；CUDA Graph 将操作及依赖捕获后，通过一次 Graph Launch 重放整张执行图。*
