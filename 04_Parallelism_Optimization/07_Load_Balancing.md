@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![07_Load_Balancing 可视化](../images/04_Parallelism_Optimization/07_Load_Balancing.svg)
+
+*图：左侧工作量不均导致慢任务拖住整体完成时间；右侧分配更均衡，但实际应按任务成本而非数量均分。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![并行负载均衡](../images/04_Parallelism_Optimization/07_Load_Balancing.svg)
 
 *图：左侧任务分配不均，部分工作单元提前空闲；右侧任务量更均衡，各单元完成时间更接近。实际任务成本可能不同，不能只按任务个数均分。*
