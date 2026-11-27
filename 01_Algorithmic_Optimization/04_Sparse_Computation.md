@@ -40,7 +40,7 @@ flowchart LR
 ```
 
 
-若矩阵 (A\in\mathbb R^{m\times n}) 只有 $nnz$ 个非零元素，稠密存储需要保存 $mn$ 个数；稀疏表示则只保存非零值及其位置。
+若矩阵 $A\in\mathbb R^{m\times n}$ 只有 $nnz$ 个非零元素，稠密存储需要保存 $mn$ 个数；稀疏表示则只保存非零值及其位置。
 
 稠密矩阵向量乘法约需 $2mn$ FLOPs；稀疏矩阵向量乘法约需 $2nnz$ FLOPs，另有索引读取和不规则访存成本。
 
