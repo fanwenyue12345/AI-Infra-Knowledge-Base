@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![Shared Memory 数据复用](../images/05_Kernel_Optimization/06_Shared_Memory.svg)
 
-*图：Block 中多个线程协作把数据从 Global Memory 搬到 Shared Memory，再从共享区域读取并复用。同步确保消费者在线程写入完成后读取。*
 
 ### 2.2 数学原理与核心技术
 
