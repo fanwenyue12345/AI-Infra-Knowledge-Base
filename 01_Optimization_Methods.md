@@ -135,6 +135,23 @@ flowchart TD
 
 > **重要结论：** 高性能优化没有一个适用于所有场景的“万能技巧”。必须先定位瓶颈，再选择优化层次；最后通过正确性、数值误差和端到端基准测试验证收益。
 
+
+
+## 八大专题深入学习入口
+
+每个目录下包含分类索引和独立专题文档。当前先建立结构；具体内容将在后续逐篇讨论后完善。
+
+| 分类 | 专题目录 |
+|---|---|
+| 01 算法与数学优化 | [进入专题](01_Algorithmic_Optimization/README.md) |
+| 02 计算图优化 | [进入专题](02_Computation_Graph_Optimization/README.md) |
+| 03 内存优化 | [进入专题](03_Memory_Optimization/README.md) |
+| 04 并行优化 | [进入专题](04_Parallelism_Optimization/README.md) |
+| 05 Kernel 优化 | [进入专题](05_Kernel_Optimization/README.md) |
+| 06 编译器优化 | [进入专题](06_Compiler_Optimization/README.md) |
+| 07 数值精度优化 | [进入专题](07_Numerical_Optimization/README.md) |
+| 08 系统与分布式优化 | [进入专题](08_System_Optimization/README.md) |
+
 ## 如何使用这份分类
 
 下面八类是观察和分析优化问题的八个视角，并不是彼此互斥的算法分类。同一个项目经常跨越多个层次。例如 FlashAttention 同时涉及算法重组、IO 优化和 GPU Kernel 设计；ReWY 的主要贡献在数学与梯度计算图层面，也包含面向硬件的 Kernel 实现。
