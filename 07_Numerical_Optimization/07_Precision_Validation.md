@@ -6,62 +6,61 @@
 
 ## 01. 一句话定义与核心目的
 
-**一句话定义：** 精度验证是通过参考结果、误差指标、数值性质和任务级指标，判断某种数据格式、算法变换或硬件实现是否满足正确性与精度要求的过程。
+**一句话定义：** 精度验证是将优化实现的数值结果与可信参考结果或明确的误差标准比较，判断低精度、近似和变换后的计算是否满足正确性要求。
 
-**核心目的：** 确保性能优化没有引入不可接受的数值偏差。对于低精度计算、量化、算子融合和跨硬件适配，不能只看程序是否运行成功，还需要检查输出、梯度、误差分布以及最终任务质量。
+**核心目的：** 防止性能优化以不可接受的数值偏差换取速度，建立可重复、可量化的正确性证据。精度验证应覆盖不同输入规模、数据类型、边界情况和实际任务指标，而不是只检查单个随机样本。
 
 ## 02. 数学原理与核心技术
 
 ### 2.1 可视化理解
 
-![精度验证流程](../images/07_Numerical_Optimization/07_Precision_Validation.svg)
+![精度验证对比](../images/07_Numerical_Optimization/07_Precision_Validation.svg)
 
-*图：将待验证实现与可信参考结果比较，先检查数值误差，再结合容差、梯度和任务指标作出通过、调查或拒绝的判断。*
+*图：优化实现与高精度参考值逐元素比较，统计绝对/相对误差，并检查最大误差、均方误差和任务级指标是否满足预设阈值。*
 
 ### 2.2 数学原理与核心技术
 
-给定参考结果 $y$ 和候选实现输出 $\hat y$，常用逐元素误差为：
-
-**绝对误差：**
+设参考结果为 $y$，待验证实现输出为 $\hat{y}$。常用指标包括最大绝对误差：
 
 $$
-e_{\mathrm{abs}}=|\hat y-y|
+E_{max}=\max_i|\hat{y}_i-y_i|,
 $$
 
-**相对误差：**
+均方根误差：
 
 $$
-e_{\mathrm{rel}}=
-\frac{|\hat y-y|}{\max(|y|,\varepsilon)}
+RMSE=
+\sqrt{\frac{1}{N}\sum_{i=1}^{N}(\hat{y}_i-y_i)^2},
 $$
 
-其中 $\varepsilon$ 用于避免参考值接近零时相对误差失去意义。张量比较通常结合绝对容差与相对容差：
+以及相对误差。对接近零的参考值，单纯相对误差会不稳定，因此常使用带绝对容差的判据：
 
 $$
-|\hat y-y|\le
-\mathrm{atol}+\mathrm{rtol}|y|
+|\hat{y}_i-y_i|
+\leq atol+rtol\,|y_i|.
 $$
+
+其中 $atol$ 是绝对容差，$rtol$ 是相对容差。
 
 **核心技术：**
+- **Reference Implementation：** 使用高精度、成熟库或可信算法构建参考结果。
+- **Elementwise Error：** 统计逐元素误差、最大误差和误差分布。
+- **Tolerance Test：** 使用 atol/rtol 等阈值判断是否通过。
+- **Randomized Testing：** 多种随机输入、不同分布和不同形状测试。
+- **Edge-case Testing：** 覆盖零值、极大/极小值、非连续布局、边界尺寸和特殊值。
+- **Gradient Validation：** 对可微算子比较梯度，必要时使用有限差分或高精度参考。
+- **Task-level Validation：** 对模型推理/训练验证准确率、损失或下游任务指标。
+- **Reproducibility：** 固定版本、硬件、随机种子和测量设置，记录验证条件。
 
-- **Reference Baseline：** 使用更高精度实现、可信库函数、解析解或经过验证的基准作为参考。
-- **Absolute / Relative Error：** 同时观察绝对和相对误差，避免只用单一指标。
-- **Norm-based Error：** 对整个向量或矩阵计算 $L_1$、$L_2$、Frobenius 或最大范数误差。
-- **ULP Comparison：** 比较浮点结果相差多少个可表示数间隔，适合分析底层数值差异。
-- **Gradient Check：** 用有限差分近似导数，与自动微分结果比较；有限差分步长本身也会带来截断与舍入误差。
-- **Property-based Testing：** 检查守恒关系、对称性、正定性、边界条件或其他数学性质。
-- **Task-level Validation：** 对训练和推理检查损失、收敛、准确率、困惑度等最终任务指标。
-- **Cross-device Validation：** 在不同设备、编译器和精度模式下比较输出，并记录软硬件环境。
-
-验证时应覆盖代表性输入和边界输入，包括零值、极大/极小值、接近相消的输入、非连续布局、不同形状和不同批量。还要区分单次算子误差与长时间迭代、训练收敛或端到端任务误差。
+性能报告应同时记录精度条件和速度结果。若某项优化只在特定 Shape、输入范围或精度阈值下成立，应明确写出适用范围，不能把局部通过描述成普遍正确。
 
 ## 03. 代表案例
 
 | 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
 |---|---|---|---|
-| PyTorch Testing | **直接案例：** 提供张量比较、容差控制和梯度数值检查 | `torch.testing.assert_close`、`torch.autograd.gradcheck` | [GitHub](https://github.com/pytorch/pytorch) · [assert_close](https://docs.pytorch.org/docs/stable/testing.html#torch.testing.assert_close) · [gradcheck](https://docs.pytorch.org/docs/stable/autograd.html#torch.autograd.gradcheck) |
-| NVIDIA Transformer Engine | **直接案例：** 混合精度和 FP8 训练中关注数值行为与模型质量 | 精度 recipe、scaling、训练稳定性测试 | [GitHub](https://github.com/NVIDIA/TransformerEngine) · [文档](https://docs.nvidia.com/deeplearning/transformer-engine/) |
-| NVIDIA CUTLASS | **直接案例：** GPU GEMM Kernel 可通过参考实现和误差阈值验证数值正确性 | GEMM test、不同输入/累积精度、容差检查 | [GitHub](https://github.com/NVIDIA/cutlass) |
-| MLPerf | **关联案例：** 以规定的质量阈值和任务规则验证训练/推理系统结果 | Accuracy target、模型质量与性能结果的联合评估 | [GitHub](https://github.com/mlcommons) · [MLPerf](https://mlcommons.org/benchmarks/) |
+| PyTorch Testing | **直接工具：** 提供张量比较、误差容差和数值测试设施 | assert_close、gradcheck、dtype tests | [GitHub](https://github.com/pytorch/pytorch) · [Testing 文档](https://docs.pytorch.org/docs/stable/testing.html) |
+| NVIDIA Transformer Engine | **直接案例：** FP8/混合精度工作流包含精度策略和数值检查 | FP8 recipe、scaling、accuracy validation | [GitHub](https://github.com/NVIDIA/TransformerEngine) |
+| oneDNN | **直接案例：** 高性能算子库需在多数据类型和实现路径下维持数值正确性 | numerical behavior、primitive tests、data types | [GitHub](https://github.com/oneapi-src/oneDNN) |
+| ReWY | **关联案例：** 公开结果中特别标注 precision-qualified 结果，说明性能数据需要与精度验证绑定 | full saving、精度门槛、性能结果筛选 | [GitHub](https://github.com/flashserve/ReWY) |
 
-精度验证不能只报告一个最大误差数字。应同时说明参考实现、数据类型、输入分布、误差度量、容差依据和任务级结果。
+建议把“数值正确性测试”和“任务级精度评估”分开记录：前者检查算子输出与梯度，后者判断误差是否影响真实模型或科学计算任务。
