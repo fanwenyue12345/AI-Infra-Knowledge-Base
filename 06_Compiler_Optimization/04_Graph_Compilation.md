@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![04_Graph_Compilation 可视化](../images/06_Compiler_Optimization/04_Graph_Compilation.svg)
+
+*图：模型先被捕获为计算图，再进行图级优化、设备分区和代码生成。动态 Shape、控制流和副作用会限制捕获与变换。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![图编译流程](../images/06_Compiler_Optimization/04_Graph_Compilation.svg)
 
 *图：模型前向执行先被捕获为计算图，随后进行图级优化、设备分区和代码生成。动态图中的数据依赖、控制流和副作用会影响捕获范围与优化合法性。*
