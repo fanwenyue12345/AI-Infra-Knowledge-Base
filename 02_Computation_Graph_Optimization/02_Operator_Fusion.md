@@ -20,7 +20,6 @@
 
 *图源：TorchInductor reduction kernel 技术文章。展示多个 reduction / pointwise 操作融合前后的 IR 结构。参见[原始文章](https://karthick.ai/blog/2025/Learn-By-Doing-Torchinductor-Reduction/)。*
 
-*图：未融合路径将中间张量 t 写出后再读取；融合路径在一个 Kernel 中完成逐元素加法和 ReLU，减少中间张量流量与启动开销。*
 
 ### 2.2 数学原理与核心技术
 
