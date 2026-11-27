@@ -1,39 +1,54 @@
 # 编译器算子融合
 
-- **所属分类：** [06 编译器优化](README.md)
-- **专题编号：** 05
-- **状态：** 待共同设计与编写
+**所属分类：** [06 编译器优化](README.md)  
+**英文名称：** Compiler Operator Fusion  
+**专题编号：** 05
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** 编译器算子融合是在计算图或 IR 中识别满足条件的连续操作，并将其组合成更少的执行单元或 Kernel 的编译期变换。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 减少 Kernel Launch、中间张量物化和重复内存访问，同时让编译器根据形状、布局和硬件资源自动决定融合范围。它与计算图优化中的算子融合属于同一优化思想，但本专题重点是编译器如何识别、决策和生成融合代码。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![编译器算子融合](../images/06_Compiler_Optimization/05_Compiler_Operator_Fusion.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：编译器将多个相邻算子融合为一个 Kernel，避免中间张量写回；融合范围还需考虑依赖和资源约束。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、编译流程、实现机制和关键参数。
+考虑：
 
-## 5. 经典项目与案例
+$$
+y=\operatorname{ReLU}(x+b).
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+分离执行可能产生中间张量 $t=x+b$；融合后直接计算：
 
-## 6. 实验与性能验证
+$$
+y_i=\max(x_i+b_i,0).
+$$
 
-待讨论：验证方法、指标、基线、测试条件和结果解释。
+编译器的关键任务是找到合法融合区域，并生成能在目标硬件上有效执行的代码。
 
-## 7. 我们的理解与研究问题
+**核心技术：**
+- **Fusion Pattern：** 识别可融合的 Producer–Consumer、Elementwise、Reduction 等模式。
+- **Fusion Legality：** 检查数据依赖、控制流、副作用和数值语义。
+- **Fusion Cost Model：** 估算减少的访存与启动开销，以及寄存器压力、并行度下降等潜在代价。
+- **Fusion Boundary：** 决定融合子图的输入、输出和内部中间值。
+- **Kernel Generation：** 将融合区域降低并生成一个或多个目标 Kernel。
+- **Epilogue Fusion：** 将偏置、激活、缩放等后处理并入 GEMM 输出阶段。
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+融合越大并不总越好。编译器需要平衡访存减少、Kernel 数量、寄存器占用、代码规模和硬件并行度。
 
-## 参考资料
+## 03. 代表案例
 
-待补充：优先使用原始论文、官方文档和项目源码。
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| TorchInductor | **直接案例：** 对 FX 图执行融合分区并生成 Triton/C++ 代码 | Scheduler、Fusion、codegen | [GitHub](https://github.com/pytorch/pytorch) · [TorchInductor 文档](https://docs.pytorch.org/docs/stable/torch.compiler.html) |
+| XLA | **直接案例：** 在 HLO 层执行融合并生成后端程序 | HLO Fusion、fusion emitter | [GitHub](https://github.com/openxla/xla) |
+| TVM | **直接案例：** 通过计算图与 TensorIR 调度融合计算 | FuseOps、compute_at、TensorIR | [GitHub](https://github.com/apache/tvm) |
+| TensorRT | **直接案例：** 推理引擎构建阶段执行层融合和 Kernel 选择 | layer fusion、tactic selection | [GitHub](https://github.com/NVIDIA/TensorRT) |
