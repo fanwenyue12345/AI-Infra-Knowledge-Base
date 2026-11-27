@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![PyTorch activation checkpointing diagram](https://pytorch.org/wp-content/uploads/2025/03/fg5.png)
+![05_Recomputation 可视化](../images/02_Computation_Graph_Optimization/05_Recomputation.svg)
+
+*相关成熟资料：PyTorch 官方 Activation Checkpointing 技术文章，详见[原始链接](https://pytorch.org/blog/activation-checkpointing-techniques/)。*
 
 *图源：PyTorch 官方博客《Current and New Activation Checkpointing Techniques in PyTorch》。展示 activation checkpoint 区域如何减少保存的中间张量，并在反向阶段重新计算。参见[官方原文](https://pytorch.org/blog/activation-checkpointing-techniques/)。*
 
