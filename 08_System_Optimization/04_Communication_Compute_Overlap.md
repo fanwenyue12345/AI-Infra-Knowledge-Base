@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![通信计算重叠时间线](../images/08_System_Optimization/04_Communication_Compute_Overlap.svg)
 
-*图：某层梯度完成后即可启动该 Bucket 的 AllReduce，同时反向计算继续处理更早层的梯度。重叠区间越大，潜在可隐藏的通信时间越多。*
 
 ### 2.2 数学原理与核心技术
 
