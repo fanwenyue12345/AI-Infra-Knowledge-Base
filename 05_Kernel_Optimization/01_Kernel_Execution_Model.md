@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![Kernel 执行模型](../images/05_Kernel_Optimization/01_Kernel_Execution_Model.svg)
 
-*图：Host 发起 Kernel Launch，Grid 包含多个 Block，Block 被调度到 SM，Block 内线程组成 Warp 执行指令。具体调度和驻留数量由硬件资源决定。*
 
 ### 2.2 数学原理与核心技术
 
