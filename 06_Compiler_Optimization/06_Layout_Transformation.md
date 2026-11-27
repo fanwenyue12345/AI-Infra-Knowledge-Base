@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![06_Layout_Transformation 可视化](../images/06_Compiler_Optimization/06_Layout_Transformation.svg)
+
+*图：同一逻辑矩阵可有不同物理地址顺序和线程分配。布局改变元素到地址、线程、Lane 和寄存器的映射。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![Layout Transformation](../images/06_Compiler_Optimization/06_Layout_Transformation.svg)
 
 *图：同一逻辑矩阵可采用不同物理地址顺序，也可分配给不同线程。逻辑索引不变，但线程持有关系和访存连续性会改变。*
