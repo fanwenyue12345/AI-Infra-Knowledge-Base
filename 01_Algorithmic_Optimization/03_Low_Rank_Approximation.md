@@ -27,17 +27,17 @@ flowchart LR
 
 对矩阵 (A\in\mathbb R^{m\times n})，奇异值分解为：
 
-$
+$$
 A=U\Sigma V^T.
-$
+$$
 
-保留最大的 (r) 个奇异值及对应奇异向量，可得秩为 (r) 的近似：
+保留最大的 $r$ 个奇异值及对应奇异向量，可得秩为 $r$ 的近似：
 
-$
+$$
 A_r=U_r\Sigma_rV_r^T,\quad r\ll\min(m,n).
-$
+$$
 
-Eckart–Young 定理指出，在 Frobenius 范数或谱范数意义下，截断 SVD 给出最佳的秩-(r) 近似。若写成因子形式 (A_r=BC)，存储量可从 (mn) 降为约 (r(m+n))。
+Eckart–Young 定理指出，在 Frobenius 范数或谱范数意义下，截断 SVD 给出最佳的秩-$r$ 近似。若写成因子形式 $A_r=BC$，存储量可从 $mn$ 降为约 $r(m+n)$。
 
 核心技术：
 - **SVD / Truncated SVD：** 通过奇异值大小判断主要信息方向。
