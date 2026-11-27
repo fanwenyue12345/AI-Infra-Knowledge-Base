@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![08_Code_Generation 可视化](../images/06_Compiler_Optimization/08_Code_Generation.svg)
+
+*图：低层 IR 经指令选择、寄存器分配和指令调度，生成目标 ISA；CUDA 路径中 PTX 与 SASS 需要区分。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![代码生成过程](../images/06_Compiler_Optimization/08_Code_Generation.svg)
 
 *图：低层 IR 经过指令选择、寄存器分配和指令调度，生成目标汇编或机器码。GPU 编译链还可能经过 PTX、目标机器码等设备相关阶段。*
