@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![NVIDIA NVPL Sparse CSR storage format](https://docs.nvidia.com/nvpl/latest/sparse/_images/csr.png)
+![04_Sparse_Computation 可视化](../images/01_Algorithmic_Optimization/04_Sparse_Computation.svg)
+
+*相关成熟资料：NVIDIA NVPL Sparse 的 CSR 存储格式说明，详见[原始链接](https://docs.nvidia.com/nvpl/latest/sparse/storage_format/sparse_matrix.html)。*
 
 *图源：NVIDIA NVPL Sparse 官方文档。展示稠密矩阵中的非零元素如何映射到 CSR 的 row offsets、column indices 与 values。参见[NVIDIA 原始文档](https://docs.nvidia.com/nvpl/latest/sparse/storage_format/sparse_matrix.html)。*
 
