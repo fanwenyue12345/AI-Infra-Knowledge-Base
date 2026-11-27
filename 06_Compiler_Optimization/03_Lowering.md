@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![03_Lowering 可视化](../images/06_Compiler_Optimization/03_Lowering.svg)
+
+*图：矩阵乘法从高层算子逐步降低为循环、Tile、线程映射、内存操作和目标指令。具体阶段可能合并、交错或重复执行。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![Lowering 逐层降低](../images/06_Compiler_Optimization/03_Lowering.svg)
 
 *图：一个高层矩阵乘法逐步变成循环与 Tile，再变成线程映射、内存操作和目标指令。不同编译器的具体阶段可能合并、交错或重复执行。*
