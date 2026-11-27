@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![ZeRO 状态分片](../images/08_System_Optimization/05_DeepSpeed_ZeRO.svg)
 
-*图：传统数据并行在每张 GPU 上复制完整模型状态；ZeRO 按阶段逐步分片优化器状态、梯度和参数，降低单卡冗余存储。*
 
 ### 2.2 数学原理与核心技术
 
