@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![03_Lowering 可视化](../images/06_Compiler_Optimization/03_Lowering.svg)
+
+*图：Lowering 逐步暴露循环、Tile、线程映射、内存操作和目标指令等实现细节。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![编译 Lowering 层级](../images/06_Compiler_Optimization/03_Lowering.svg)
 
 *图：高层张量算子逐步变成循环/索引、线程与内存操作，再转成目标指令。实际编译器的层级和顺序因框架与后端不同。*
