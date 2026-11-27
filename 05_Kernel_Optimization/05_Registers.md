@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![05_Registers 可视化](../images/05_Kernel_Optimization/05_Registers.svg)
+
+*图：SM 寄存器文件容量有限。每线程寄存器需求增加时，可驻留线程数可能下降；资源不足还可能导致 Spill。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![寄存器资源分配](../images/05_Kernel_Optimization/05_Registers.svg)
 
 *图：SM 的寄存器文件容量由驻留线程共同使用。每线程寄存器需求越高，同一 SM 能容纳的线程数量通常越少；超出可分配资源时可能发生 Spill。*
