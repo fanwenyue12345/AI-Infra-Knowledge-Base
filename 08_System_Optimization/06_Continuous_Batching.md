@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![Continuous Batching 请求调度](../images/08_System_Optimization/06_Continuous_Batching.svg)
 
-*图：静态 Batch 中短请求完成后可能留下空槽，直到长请求结束；连续批处理在迭代边界移除完成请求并填入新请求。*
 
 ### 2.2 数学原理与核心技术
 
