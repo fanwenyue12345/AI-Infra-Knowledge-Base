@@ -2,21 +2,21 @@
 
 **Kernel Optimization**
 
-本目录研究单个 GPU Kernel 如何映射到硬件并高效执行。专题内容将在后续逐项讨论后完善。
+本目录研究单个 GPU Kernel 从启动、线程组织、SM 调度到片上资源、矩阵硬件和流水执行的完整过程，并介绍如何通过 Profiler 定位瓶颈。九篇专题已建立第一轮内容初稿。
 
 ## 专题索引
 
 | 编号 | 专题 | 状态 |
 |---:|---|---|
-| 1 | [Kernel 执行模型](01_Kernel_Execution_Model.md) | 待共同设计 |
-| 2 | [Thread / Warp / Block / SM](02_Thread_Warp_Block_SM.md) | 待共同设计 |
-| 3 | [Warp 调度](03_Warp_Scheduling.md) | 待共同设计 |
-| 4 | [Occupancy（占用率）](04_Occupancy.md) | 待共同设计 |
-| 5 | [寄存器](05_Registers.md) | 待共同设计 |
-| 6 | [Shared Memory（共享内存）](06_Shared_Memory.md) | 待共同设计 |
-| 7 | [Tensor Core](07_Tensor_Core.md) | 待共同设计 |
-| 8 | [流水线](08_Pipelining.md) | 待共同设计 |
-| 9 | [Profiler 与性能分析](09_Profiling.md) | 待共同设计 |
+| 1 | [Kernel 执行模型](01_Kernel_Execution_Model.md) | 已建立初稿 |
+| 2 | [Thread / Warp / Block / SM](02_Thread_Warp_Block_SM.md) | 已建立初稿 |
+| 3 | [Warp 调度](03_Warp_Scheduling.md) | 已建立初稿 |
+| 4 | [Occupancy（占用率）](04_Occupancy.md) | 已建立初稿 |
+| 5 | [寄存器](05_Registers.md) | 已建立初稿 |
+| 6 | [Shared Memory（共享内存）](06_Shared_Memory.md) | 已建立初稿 |
+| 7 | [Tensor Core](07_Tensor_Core.md) | 已建立初稿 |
+| 8 | [流水线](08_Pipelining.md) | 已建立初稿 |
+| 9 | [Profiler 与性能分析](09_Profiling.md) | 已建立初稿 |
 
 ## 统一专题写作与可视化规范
 
