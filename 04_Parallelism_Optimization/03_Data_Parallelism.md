@@ -1,39 +1,54 @@
 # 数据并行
 
-- **所属分类：** [04 并行优化](README.md)
-- **专题编号：** 03
-- **状态：** 待共同设计与编写
+**所属分类：** [04 并行优化](README.md)  
+**英文名称：** Data Parallelism  
+**专题编号：** 03
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** 数据并行是将一个批次或数据集切分到多个计算设备上，各设备执行相同模型或操作，再按算法要求汇总局部结果。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 通过增加处理数据的设备数量，提高训练吞吐量或数据处理能力。深度学习中常见做法是每张 GPU 保存一份模型副本，处理不同 mini-batch 分片，并同步梯度以保持训练过程一致。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![数据并行训练](../images/04_Parallelism_Optimization/03_Data_Parallelism.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：全局 Batch 被切成多个本地 Batch 分发到不同 GPU；每张 GPU 计算局部梯度，随后通过 AllReduce 汇总并同步梯度。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、硬件机制、实现流程和关键参数。
+设全局 Batch 包含 $B$ 个样本，分配到 $p$ 个设备。第 $r$ 个设备处理本地数据集 $D_r$，计算局部梯度：
 
-## 5. 经典项目与案例
+$$
+g_r=\frac{1}{|D_r|}\sum_{x\in D_r}\nabla_\theta\ell(\theta;x).
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+当各设备本地 Batch 大小相同时，全局平均梯度为：
 
-## 6. 实验与性能验证
+$$
+g=\frac{1}{p}\sum_{r=1}^{p}g_r.
+$$
 
-待讨论：验证方法、指标、基线、测试条件和结果解释。
+若各设备样本数不同，则应按样本数量加权，而不能简单平均各设备的局部均值。
 
-## 7. 我们的理解与研究问题
+**核心技术：**
+- **Data Sharding：** 将样本、序列或数据分片分配给不同设备。
+- **Model Replication：** 每个设备保留一份模型参数副本。
+- **Gradient Synchronization：** 同步各设备计算出的梯度。
+- **AllReduce：** 对所有设备的局部张量执行归约并将结果分发回各设备。
+- **Global Batch 与 Local Batch：** 全局 Batch 通常等于各设备本地 Batch 之和，需考虑梯度累积和最后一个不完整 Batch。
+- **Synchronous / Asynchronous Training：** 同步方式等待参与设备完成更新；异步方式可能引入梯度陈旧等问题。
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+数据并行通常复制模型参数、梯度和优化器状态，因此模型状态本身的显存占用不会因设备数增加而自动减少。模型过大时需要结合 ZeRO 或模型并行策略。
 
-## 参考资料
+## 03. 代表案例
 
-待补充：优先使用原始论文、官方文档和项目源码。
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| PyTorch DistributedDataParallel | **直接案例：** 多进程/多 GPU 同步梯度，支持 Bucket 与通信重叠 | DDP、gradient buckets、communication hooks | [GitHub](https://github.com/pytorch/pytorch) · [DDP 文档](https://docs.pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html) |
+| Horovod | **直接案例：** 跨设备和跨框架的分布式训练抽象 | Distributed optimizer、AllReduce | [GitHub](https://github.com/horovod/horovod) |
+| NVIDIA NCCL | **基础组件：** GPU 集合通信原语，常用于梯度同步 | AllReduce、AllGather、ReduceScatter | [GitHub](https://github.com/NVIDIA/nccl) |
+| TensorFlow Distributed Training | **直接案例：** MirroredStrategy 等数据并行训练策略 | strategy、replica、global batch | [官方指南](https://www.tensorflow.org/guide/distributed_training) |
