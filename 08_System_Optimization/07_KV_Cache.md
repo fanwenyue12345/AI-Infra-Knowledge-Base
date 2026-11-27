@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![07_KV_Cache 可视化](../images/08_System_Optimization/07_KV_Cache.svg)
+
+*图：每一步只为新 Token 计算新的 K/V 并追加缓存；当前 Query 复用历史 K/V 完成因果注意力。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![KV Cache 自回归生成](../images/08_System_Optimization/07_KV_Cache.svg)
 
 *图：每一步只为新 Token 计算新的 K/V，并追加到历史缓存；Query 与历史 K/V 计算注意力，不必重新生成全部历史 K/V。*
