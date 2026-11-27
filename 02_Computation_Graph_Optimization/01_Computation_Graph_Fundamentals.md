@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![计算图基础可视化](../images/02_Computation_Graph_Optimization/01_Computation_Graph_Fundamentals.svg)
+![OpenXLA HLO graph visualization](https://openxla.org/static/xprof/images/trace_viewer_to_hlo_graph_2.png)
+
+*图源：OpenXLA XProf 官方文档。展示实际 HLO 图中的算子、张量边和融合区域。参见[官方 Trace Viewer 文档](https://openxla.org/xprof/trace_viewer)。*
 
 *图：节点表示输入或运算，有向边表示数据依赖。a=x+y 必须先于 z=a×w 执行；互不依赖的分支可以独立调度。*
 
