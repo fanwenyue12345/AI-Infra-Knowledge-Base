@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![03_Data_Parallelism 可视化](../images/04_Parallelism_Optimization/03_Data_Parallelism.svg)
+
+*图：全局 Batch 切分到不同 GPU，各自计算局部梯度，再通过 AllReduce 得到同步梯度。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![数据并行训练](../images/04_Parallelism_Optimization/03_Data_Parallelism.svg)
 
 *图：全局 Batch 被切成多个本地 Batch 分发到不同 GPU；每张 GPU 计算局部梯度，随后通过 AllReduce 汇总并同步梯度。*
