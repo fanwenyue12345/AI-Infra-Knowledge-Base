@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![05_Compiler_Operator_Fusion 可视化](../images/06_Compiler_Optimization/05_Compiler_Operator_Fusion.svg)
+
+*图：编译器先检查依赖、副作用和资源成本，再将合法的连续算子融合为一个 Kernel。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![编译器算子融合](../images/06_Compiler_Optimization/05_Compiler_Operator_Fusion.svg)
 
 *图：编译器将多个相邻算子融合为一个 Kernel，避免中间张量写回；融合范围还需考虑依赖和资源约束。*
