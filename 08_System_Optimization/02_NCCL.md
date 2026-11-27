@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![02_NCCL 可视化](../images/08_System_Optimization/02_NCCL.svg)
+
+*图：多个 GPU Rank 通过 NVLink、PCIe 或网络互联，NCCL 在拓扑基础上执行集合通信。图为概念拓扑，不代表固定连接结构。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![NCCL 多 GPU 通信](../images/08_System_Optimization/02_NCCL.svg)
 
 *图：多个 GPU 通过节点内互联和跨节点网络交换数据；NCCL 根据拓扑和通信规模选择合适的通信路径与算法。*
