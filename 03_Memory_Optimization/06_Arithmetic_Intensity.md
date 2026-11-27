@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![06_Arithmetic_Intensity 可视化](../images/03_Memory_Optimization/06_Arithmetic_Intensity.svg)
+
+*图：保持计算量不变时，减少目标存储层级的数据传输 Bytes 会提高 FLOPs/Byte。图中数值为解释概念的示例。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![Arithmetic Intensity](../images/03_Memory_Optimization/06_Arithmetic_Intensity.svg)
 
 *图：相同计算量下，若通过数据复用减少从所选存储层级传输的 Bytes，算术强度就会提高。图中数值仅为概念示例。*
