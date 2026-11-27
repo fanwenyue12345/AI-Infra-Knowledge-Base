@@ -26,6 +26,35 @@
 7. Numerical Precision Optimization
 8. System & Distributed Optimization
 
+
+
+## 八大专题目录
+
+每个分类目录包含一份分类索引 README 和独立的二级专题 Markdown 文件。专题文件目前先建立结构与入口，具体内容将在后续逐篇讨论、确认后补充。
+
+| 分类 | 专题目录 |
+|---|---|
+| 01 算法与数学优化 | [01_Algorithmic_Optimization](01_Algorithmic_Optimization/README.md) |
+| 02 计算图优化 | [02_Computation_Graph_Optimization](02_Computation_Graph_Optimization/README.md) |
+| 03 内存优化 | [03_Memory_Optimization](03_Memory_Optimization/README.md) |
+| 04 并行优化 | [04_Parallelism_Optimization](04_Parallelism_Optimization/README.md) |
+| 05 Kernel 优化 | [05_Kernel_Optimization](05_Kernel_Optimization/README.md) |
+| 06 编译器优化 | [06_Compiler_Optimization](06_Compiler_Optimization/README.md) |
+| 07 数值精度优化 | [07_Numerical_Optimization](07_Numerical_Optimization/README.md) |
+| 08 系统与分布式优化 | [08_System_Optimization](08_System_Optimization/README.md) |
+
+## 专题文档统一结构
+
+1. 快速理解
+2. 背景与问题
+3. 核心原理与理论基础
+4. 工程实现
+5. 经典项目与案例
+6. 实验与性能验证
+7. 我们的理解与研究问题
+
+专题索引负责导航，专题 MD 负责深入学习，项目档案负责记录具体开源项目；个人理解和研究假设单独记录，避免重复内容。
+
 ## 记录原则
 
 1. 尽可能从问题出发，解释技术为什么出现。
