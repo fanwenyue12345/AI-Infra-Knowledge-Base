@@ -1,39 +1,73 @@
 # 张量并行
 
-- **所属分类：** [04 并行优化](README.md)
-- **专题编号：** 04
-- **状态：** 待共同设计与编写
+**所属分类：** [04 并行优化](README.md)  
+**英文名称：** Tensor Parallelism  
+**专题编号：** 04
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** 张量并行是把单个模型层中的权重矩阵、激活张量或运算维度切分到多个设备上，让多个设备协同完成同一层的计算。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 当单层矩阵或模型参数无法高效放入单张 GPU，或希望利用多 GPU 的聚合计算能力时，将层内计算分散到多设备。代价是设备之间需要执行 AllReduce、AllGather 或 ReduceScatter 等通信。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![张量并行矩阵切分](../images/04_Parallelism_Optimization/04_Tensor_Parallelism.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：矩阵乘法按输出列切分时，各设备计算局部输出列；按输入维度切分时，各设备计算局部部分和，通常需要归约通信。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、硬件机制、实现流程和关键参数。
+考虑线性层：
 
-## 5. 经典项目与案例
+$$
+Y=XW,
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+其中 $X\in\mathbb R^{B\times H}$，$W\in\mathbb R^{H\times O}$。
 
-## 6. 实验与性能验证
+**Column Parallel（按输出维切分）：**
 
-待讨论：验证方法、指标、基线、测试条件和结果解释。
+将权重按列切分：
 
-## 7. 我们的理解与研究问题
+$$
+W=[W_1,W_2,\ldots,W_p].
+$$
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+各设备独立计算：
 
-## 参考资料
+$$
+Y_r=XW_r,
+$$
 
-待补充：优先使用原始论文、官方文档和项目源码。
+最后按列拼接得到 $Y$，通常对应 AllGather，或让后续消费者直接使用分片输出。
+
+**Row Parallel（按输入维切分）：**
+
+将权重按行切分，并将输入按对应维度分片：
+
+$$
+Y=\sum_{r=1}^{p}X_rW_r.
+$$
+
+各设备得到局部部分和，需要通过 AllReduce 或 ReduceScatter 等操作组合结果。
+
+**核心技术：**
+- **Column Parallel Linear：** 沿输出特征维度切分权重，产生分片输出。
+- **Row Parallel Linear：** 沿输入特征维度切分，局部结果需要归约。
+- **Attention Head Parallelism：** 将不同 Attention Heads 分配给不同设备。
+- **Collective Communication：** 使用 AllReduce、AllGather、ReduceScatter 交换或组合张量。
+- **Sequence / Context Parallel：** 在序列维度切分，属于相关但目标不同的并行策略。
+
+张量并行通信频繁，通常更依赖高速互联；切分粒度、层结构、Batch/Sequence 长度和通信拓扑都会影响扩展效率。
+
+## 03. 代表案例
+
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| Megatron-LM | **经典直接案例：** Transformer 层内张量模型并行 | Column/Row Parallel Linear、Attention 与 MLP 切分 | [GitHub](https://github.com/NVIDIA/Megatron-LM) · [论文](https://arxiv.org/abs/1909.08053) |
+| DeepSpeed | **直接案例：** 提供 Tensor Parallel 等大模型分布式训练能力 | TP、通信与模型切分 | [GitHub](https://github.com/deepspeedai/DeepSpeed) |
+| vLLM | **关联案例：** 推理时支持张量并行部署大型模型 | TP worker、权重切分、分布式执行 | [GitHub](https://github.com/vllm-project/vllm) |
+| Colossal-AI | **直接案例：** 提供多维并行训练策略 | 1D/2D/2.5D/3D Tensor Parallelism | [GitHub](https://github.com/hpcaitech/ColossalAI) |
