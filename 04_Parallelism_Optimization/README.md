@@ -2,20 +2,20 @@
 
 **Parallelism Optimization**
 
-本目录用于系统学习并行优化。本阶段先建立专题入口；每篇的具体内容、深度和案例由后续逐项讨论确定。
+本目录研究如何拆分计算任务、组织 GPU 与多设备并行、协调数据通信并平衡负载。八篇专题已建立第一轮内容初稿。
 
 ## 专题索引
 
 | 编号 | 专题 | 状态 |
 |---:|---|---|
-| 1 | [并行基础](01_Parallel_Computing_Fundamentals.md) | 待共同设计 |
-| 2 | [GPU 并行](02_GPU_Parallelism.md) | 待共同设计 |
-| 3 | [数据并行](03_Data_Parallelism.md) | 待共同设计 |
-| 4 | [张量并行](04_Tensor_Parallelism.md) | 待共同设计 |
-| 5 | [流水线并行](05_Pipeline_Parallelism.md) | 待共同设计 |
-| 6 | [序列并行](06_Sequence_Parallelism.md) | 待共同设计 |
-| 7 | [负载均衡](07_Load_Balancing.md) | 待共同设计 |
-| 8 | [通信与计算重叠](08_Communication_Compute_Overlap.md) | 待共同设计 |
+| 1 | [并行基础](01_Parallel_Computing_Fundamentals.md) | 已建立初稿 |
+| 2 | [GPU 并行](02_GPU_Parallelism.md) | 已建立初稿 |
+| 3 | [数据并行](03_Data_Parallelism.md) | 已建立初稿 |
+| 4 | [张量并行](04_Tensor_Parallelism.md) | 已建立初稿 |
+| 5 | [流水线并行](05_Pipeline_Parallelism.md) | 已建立初稿 |
+| 6 | [序列并行](06_Sequence_Parallelism.md) | 已建立初稿 |
+| 7 | [负载均衡](07_Load_Balancing.md) | 已建立初稿 |
+| 8 | [通信与计算重叠](08_Communication_Compute_Overlap.md) | 已建立初稿 |
 
 ## 统一专题写作与可视化规范
 
