@@ -8,49 +8,49 @@
 
 **一句话定义：** Lowering 是把高层、抽象的程序表示逐步转换为更低层、更接近目标硬件执行机制的表示过程。
 
-**核心目的：** 将高级张量算子、循环和并行抽象逐步落实为显式的数据类型、内存访问、线程映射和机器指令，同时在每个层级保留适合该层优化的信息。
+**核心目的：** 将高级张量算子、循环和并行抽象逐步落实为具体的数据类型、内存访问、线程布局、硬件指令和调用约定，同时在每一层保留必要语义并暴露新的优化机会。
 
 ## 02. 数学原理与核心技术
 
 ### 2.1 可视化理解
 
-![03_Lowering 可视化](../images/06_Compiler_Optimization/03_Lowering.svg)
+![Lowering 逐层降低](../images/06_Compiler_Optimization/03_Lowering.svg)
 
-*图：Lowering 逐步暴露循环、Tile、线程映射、内存操作和目标指令等实现细节。*
-
-### 2.2 数学原理与核心技术
-
-### 2.1 可视化理解
-
-![编译 Lowering 层级](../images/06_Compiler_Optimization/03_Lowering.svg)
-
-*图：高层张量算子逐步变成循环/索引、线程与内存操作，再转成目标指令。实际编译器的层级和顺序因框架与后端不同。*
+*图：一个高层矩阵乘法逐步变成循环与 Tile，再变成线程映射、内存操作和目标指令。不同编译器的具体阶段可能合并、交错或重复执行。*
 
 ### 2.2 数学原理与核心技术
 
-例如矩阵乘法：
+高层表达：
 
 $$
-C_{ij}=\sum_k A_{ik}B_{kj}
+C=AB
 $$
 
-在高层 IR 中可以是一个 MatMul 操作；Lowering 后逐步展开为 Tile 循环、线程索引、向量加载、乘加指令和存储操作。
+可以先展开为循环：
+
+$$
+C_{ij}=\sum_{k=0}^{K-1}A_{ik}B_{kj}.
+$$
+
+随后再通过 Tiling 将循环迭代空间划分成小块，并映射到线程块、Warp 和矩阵硬件。Lowering 的核心不是单纯“展开公式”，而是逐步明确原先隐藏的执行细节。
 
 **核心技术：**
-- **Dialect Conversion：** 将一种 IR Dialect 的操作转换为另一种 Dialect。
-- **Loop Lowering：** 将张量计算转换为循环嵌套与迭代空间。
-- **Vectorization：** 将标量操作转换为向量或硬件矩阵指令。
-- **Memory Lowering：** 明确数据所在存储空间、地址计算和读写操作。
-- **Parallel Mapping：** 将循环迭代映射到 Thread、Warp、Block 或设备网格。
-- **Instruction Selection：** 将低层操作匹配为目标 ISA 指令。
+- **Dialect Conversion：** 将一种 IR Dialect 转换为另一种 Dialect。
+- **Loop Lowering：** 将张量或向量操作变成显式循环。
+- **Bufferization：** 将张量值语义转换为显式内存缓冲区和读写操作。
+- **GPU Lowering：** 将并行循环或 Tile 映射为 Grid、Block、线程与设备内存操作。
+- **Instruction Lowering：** 将抽象矩阵操作、归约或向量操作转换为目标 ISA 支持的指令。
+- **Legality / Conversion Target：** 规定哪些高层操作必须消除、哪些操作允许保留，保证转换结果满足目标层要求。
 
-Lowering 不是简单地“降低抽象程度”。过早 Lowering 可能丢失高层语义，使后续难以识别融合、稀疏或矩阵结构。因此编译器通常会在不同层级之间安排优化 Pass。
+Lowering 不是每次都单向、不可逆地变得更低级。编译器可能在不同层之间反复执行规范化和优化；过早丢失高层信息，也可能让某些优化更难进行。
 
 ## 03. 代表案例
 
 | 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
 |---|---|---|---|
-| MLIR | **直接案例：** 通过 Dialect Conversion 和 Pass 完成逐层转换 | Linalg、Affine、SCF、MemRef、LLVM Dialect | [文档](https://mlir.llvm.org/docs/DialectConversion/) |
-| Triton | **直接案例：** 将块级张量程序降低为 GPU 专用表示和指令 | Triton IR、TritonGPU、LLVM IR、PTX | [GitHub](https://github.com/triton-lang/triton) |
-| TVM | **直接案例：** 从 TensorIR 调度表示降低到目标后端代码 | TensorIR、TIR transformations、codegen | [GitHub](https://github.com/apache/tvm) |
-| IREE | **直接案例：** 基于 MLIR 的端到端机器学习编译器，包含多层转换 | Flow、HAL、Linalg、LLVMGPU 等层级 | [GitHub](https://github.com/iree-org/iree) |
+| MLIR | **直接案例：** 提供 Dialect Conversion 与渐进式 Lowering 机制 | ConversionTarget、RewritePattern、Linalg-to-LLVM | [官网](https://mlir.llvm.org/) · [GitHub](https://github.com/llvm/llvm-project) |
+| Triton | **直接案例：** 将块级张量程序逐步降低到 GPU 线程和目标代码 | Triton IR、GPU IR、LLVM/PTX lowering | [GitHub](https://github.com/triton-lang/triton) |
+| IREE | **直接案例：** 面向异构设备的端到端编译与运行时系统 | Flow、Stream、HAL、Codegen | [GitHub](https://github.com/iree-org/iree) |
+| TVM | **直接案例：** 从张量程序与调度表示生成目标设备代码 | TensorIR、lower、target codegen | [GitHub](https://github.com/apache/tvm) |
+
+建议沿着 MLIR 的 Linalg → SCF / Affine → GPU / LLVM Dialect 示例，观察一个张量算子怎样逐步显式化。
