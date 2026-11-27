@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![04_Tiling_and_Blocking 可视化](../images/03_Memory_Optimization/04_Tiling_and_Blocking.svg)
+
+*图：大矩阵被拆成输出 Tile；沿 K 维分块加载 A、B 子块，在片上累积后写回 C。Tile 大小需受寄存器和共享内存资源约束。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![矩阵乘法分块](../images/03_Memory_Optimization/04_Tiling_and_Blocking.svg)
 
 *图：大矩阵乘法被拆成多个输出 Tile；每个输出 Tile 通过沿 K 维循环加载 A、B 的子块，在片上累积后写回 C。图中颜色表示不同数据块，不代表特定 GPU 的固定 Tile 尺寸。*
