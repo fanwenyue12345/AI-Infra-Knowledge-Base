@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![自动微分图优化可视化](../images/02_Computation_Graph_Optimization/06_Autograd_Graph_Optimization.svg)
+![PyTorch autograd computation graph](https://bkkhyunn.github.io/assets/images/Pytorch/diagram6.png)
+
+*图源：PyTorch Autograd 学习笔记。展示叶子张量、前向运算节点、saved tensors 与反向节点之间的依赖关系。参见[原始说明](https://bkkhyunn.github.io/deep_learning/torch/torch_5/)。*
 
 *图：前向图计算 a=x+y、z=a² 和损失；反向图沿依赖反向传播梯度，并在分支汇合处累加贡献。*
 
