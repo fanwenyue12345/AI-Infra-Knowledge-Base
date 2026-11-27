@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![01_Compiler_Fundamentals 可视化](../images/06_Compiler_Optimization/01_Compiler_Fundamentals.svg)
+
+*图：源程序经过前端解析形成 IR，再经过优化、目标相关 Lowering 与代码生成，最终形成目标机器代码。真实编译器可能包含多轮 IR 和多条优化管线。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![编译器工作流程](../images/06_Compiler_Optimization/01_Compiler_Fundamentals.svg)
 
 *图：源程序经过前端解析和语义分析形成 IR，再经过优化、目标相关 Lowering 与代码生成，最终形成目标机器代码。真实编译器可能包含多轮 IR 和多条优化管线。*
