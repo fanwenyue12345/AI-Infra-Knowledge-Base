@@ -8,61 +8,49 @@
 
 **一句话定义：** 图编译是将模型或程序的计算图捕获为编译器可分析的图表示，再通过图级优化、分区和代码生成形成可执行程序的过程。
 
-**核心目的：** 在单个算子之外观察更大的计算上下文，识别跨算子融合、常量传播、冗余计算和设备分区机会，并减少动态图运行时的调度开销。
+**核心目的：** 在单个算子之外观察更大的计算上下文，识别跨算子融合、常量传播、冗余计算和设备分区机会，并减少解释执行与逐算子调度开销。
 
 ## 02. 数学原理与核心技术
 
 ### 2.1 可视化理解
 
-![04_Graph_Compilation 可视化](../images/06_Compiler_Optimization/04_Graph_Compilation.svg)
+![图编译流程](../images/06_Compiler_Optimization/04_Graph_Compilation.svg)
 
-*图：框架算子被捕获成图，经过图重写与分区，再由目标后端生成可执行代码；动态控制流可能产生 graph break 或回退。*
-
-### 2.2 数学原理与核心技术
-
-### 2.1 可视化理解
-
-![图编译过程](../images/06_Compiler_Optimization/04_Graph_Compilation.svg)
-
-*图：框架中的算子调用被捕获成计算图，编译器在图上进行变换，再将子图编译为目标设备可执行代码。*
+*图：模型前向执行先被捕获为计算图，随后进行图级优化、设备分区和代码生成。动态图中的数据依赖、控制流和副作用会影响捕获范围与优化合法性。*
 
 ### 2.2 数学原理与核心技术
 
-设计算图为：
+将模型表示为图：
 
 $$
 G=(V,E),
 $$
 
-其中 $V$ 表示算子节点，$E$ 表示数据依赖。图编译通过语义保持的变换 $T$ 生成新图：
+其中 $V$ 表示算子或值，$E$ 表示数据依赖。图编译器寻找一个语义保持的变换：
 
 $$
-G'=T(G),
+G\longrightarrow G',
 $$
 
-目标是在保持程序行为的前提下，降低执行成本：
-
-$$
-C(G')<C(G),
-$$
-
-这里 $C$ 是编译器使用的成本估计或目标函数，实际性能仍需运行测量验证。
+使得 $G'$ 在目标设备上的执行成本更低，同时保持程序的可观察行为。
 
 **核心技术：**
-- **Graph Capture：** 捕获模型执行中的算子与依赖关系。
-- **Graph Canonicalization：** 规范化图结构，便于后续模式匹配。
-- **Graph Rewrite：** 对子图进行融合、常量折叠、CSE 等变换。
-- **Partitioning：** 将图分区到不同设备或执行后端。
-- **Shape / Type Inference：** 推断张量形状与数据类型，辅助合法性检查和代码生成。
-- **AOT / JIT Compilation：** Ahead-of-Time 在运行前编译；Just-in-Time 在运行时根据实际信息编译。
+- **Graph Capture：** 通过 tracing、symbolic tracing 或显式模型 IR 捕获计算关系。
+- **Graph Simplification：** 常量折叠、CSE、DCE、形状推导和代数简化。
+- **Graph Partitioning：** 按设备能力、算子支持和数据传输成本划分子图。
+- **Fusion：** 将适合的子图合并成更少的执行单元。
+- **Shape Specialization：** 针对已知或受约束的输入形状生成专门代码。
+- **Execution Planning：** 决定子图、Kernel 和内存分配的执行顺序。
 
-动态图中存在 Python 控制流、动态形状和数据依赖时，图捕获可能需要限制、专门处理或回退到解释执行。
+图编译需要处理动态 Shape、数据依赖、控制流、别名和副作用。图越大并不必然优化越好：捕获成本、编译时间、代码膨胀和动态输入都会影响收益。
 
 ## 03. 代表案例
 
 | 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
 |---|---|---|---|
-| torch.compile / TorchDynamo | **直接案例：** 捕获 PyTorch 程序并交给后端编译优化 | Dynamo graph capture、guards、graph breaks | [GitHub](https://github.com/pytorch/pytorch) · [文档](https://docs.pytorch.org/docs/stable/torch.compiler.html) |
-| OpenXLA | **直接案例：** 将模型计算转成 HLO 并执行图级优化 | HLO、StableHLO、XLA compilation | [GitHub](https://github.com/openxla/xla) |
-| TensorFlow XLA | **直接案例：** 将 TensorFlow 子图编译为优化后的设备程序 | jit_compile、cluster、XLA HLO | [官方文档](https://www.tensorflow.org/xla) |
-| ONNX Runtime | **关联案例：** 通过图优化和 Execution Provider 将模型图映射到后端 | graph optimization、partitioning、EP | [GitHub](https://github.com/microsoft/onnxruntime) |
+| PyTorch torch.compile | **直接案例：** 捕获并优化 PyTorch 程序，后端常使用 TorchInductor | Dynamo、FX Graph、AOTAutograd、Inductor | [GitHub](https://github.com/pytorch/pytorch) · [文档](https://docs.pytorch.org/docs/stable/torch.compiler.html) |
+| OpenXLA XLA | **直接案例：** 将计算图转换为 HLO 并执行图级优化 | StableHLO、HLO、SPMD partitioning | [GitHub](https://github.com/openxla/xla) |
+| TensorRT | **直接案例：** 构建优化后的推理执行引擎 | Network definition、optimization profiles、engine build | [GitHub](https://github.com/NVIDIA/TensorRT) |
+| IREE | **直接案例：** 图/张量程序编译到多种设备后端 | compiler pipeline、HAL、dispatch formation | [GitHub](https://github.com/iree-org/iree) |
+
+图编译关注跨算子的全局机会；单个融合 Kernel 的线程组织和资源调优，则属于 Kernel 与内存优化专题。
