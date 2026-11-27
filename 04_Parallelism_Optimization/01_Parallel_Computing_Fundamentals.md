@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![并行任务拆分与合并](../images/04_Parallelism_Optimization/01_Parallel_Computing_Fundamentals.svg)
 
-*图：整体任务被拆成多个子任务并行执行，最后汇总结果。只有相互独立或依赖已满足的子任务才能同时执行。*
 
 ### 2.2 数学原理与核心技术
 
