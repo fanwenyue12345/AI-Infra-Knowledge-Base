@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![07_Auto_Tuning 可视化](../images/06_Compiler_Optimization/07_Auto_Tuning.svg)
+
+*图：调优器生成候选配置，编译、验证并测量，再选择有效且性能较好的方案；结果依赖硬件、Shape 和数据类型。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![Auto-Tuning 搜索流程](../images/06_Compiler_Optimization/07_Auto_Tuning.svg)
 
 *图：调优器生成候选配置，编译并在目标硬件上测量，通过正确性和性能筛选保留较优方案。实际系统还可能使用缓存、剪枝或机器学习模型减少搜索成本。*
