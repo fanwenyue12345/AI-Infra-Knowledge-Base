@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![01_GPU_Memory_Hierarchy 可视化](../images/03_Memory_Optimization/01_GPU_Memory_Hierarchy.svg)
+
+*图：从寄存器、共享内存与缓存到设备显存，容量、作用范围和访问特性不同。层级关系为概念化展示，具体架构因 GPU 而异。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![GPU 存储层级](../images/03_Memory_Optimization/01_GPU_Memory_Hierarchy.svg)
 
 *图：从线程私有寄存器、线程块可协作访问的 Shared Memory，到缓存和设备显存，容量通常逐级增大；访问代价、作用范围和管理方式各不相同。图为概念层级，不代表所有 GPU 的严格物理连接顺序。*
