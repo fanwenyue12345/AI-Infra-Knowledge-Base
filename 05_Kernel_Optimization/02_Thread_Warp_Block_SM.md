@@ -1,39 +1,55 @@
 # Thread / Warp / Block / SM
 
-- **所属分类：** [05 Kernel 优化](README.md)
-- **专题编号：** 02
-- **状态：** 待共同设计与编写
+**所属分类：** [05 Kernel 优化](README.md)  
+**英文名称：** Thread, Warp, Block and Streaming Multiprocessor  
+**专题编号：** 02
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** Thread、Warp、Block 和 SM 是 GPU 编程与硬件执行中不同层级的组织概念，分别对应逻辑执行线程、硬件调度组、协作线程块和主要计算单元。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 理解软件定义的线程层级如何映射到硬件资源，明确哪些线程可以协作、哪些线程一起调度，以及寄存器和共享内存等资源如何限制并发执行。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![Thread Warp Block SM 层级](../images/05_Kernel_Optimization/02_Thread_Warp_Block_SM.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：多个 Thread 组成 Warp，多个 Warp 组成 Block/CTA；一个 SM 可同时驻留多个 Block，具体数量受寄存器、共享内存和线程上限约束。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、硬件机制、实现流程和关键参数。
+在 NVIDIA CUDA 模型中：
+- **Thread：** 执行 Kernel 的逻辑线程，有自己的线程索引和寄存器状态。
+- **Warp：** 通常由 32 个线程组成，是指令调度和 SIMT 执行的重要单位。
+- **Block / CTA：** 由程序员定义，Block 内线程可通过 Shared Memory 和同步原语协作。
+- **SM（Streaming Multiprocessor）：** 包含执行管线、寄存器文件、共享内存/缓存和 Warp 调度资源的硬件单元。
 
-## 5. 经典项目与案例
+若 Block 有 $T_b$ 个线程，Warp 大小为 $W$，则该 Block 至少需要：
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+$$
+N_{warp}=\left\lceil\frac{T_b}{W}\right\rceil
+$$
 
-## 6. 实验与性能验证
+个 Warp。这里 $W=32$ 是 NVIDIA CUDA 常见配置，其他 GPU 架构可能使用不同的 Wavefront 宽度。
 
-待讨论：验证方法、指标、测试条件和结果解释。
+一个 SM 可驻留的 Block 数量受多项资源共同约束，可概念化表示为：
 
-## 7. 我们的理解与研究问题
+$$
+B_{resident}\leq
+\min(B_{thread},B_{register},B_{shared},B_{architectural}).
+$$
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+其中各上限分别由线程数、寄存器、共享内存和架构规定的最大驻留 Block 数决定。
 
-## 参考资料
+**关键区别：** Thread 和 Block 是程序员组织工作的抽象；Warp 是硬件调度粒度；SM 是实际执行资源。Block 被调度到 SM 后，其线程会被划分为 Warp 执行。
 
-待补充：优先使用原始论文、官方文档和项目源码。
+## 03. 代表案例
+
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| CUDA Programming Guide | **权威资料：** 解释 Thread、Warp、Block、SM 的执行关系 | thread hierarchy、SM resources | [官方文档](https://docs.nvidia.com/cuda/cuda-c-programming-guide/) |
+| CUDA Occupancy Calculator | **关联工具：** 根据线程数和资源使用估算 SM 驻留 Block/Warp | register、shared memory、active blocks | [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) |
+| Triton | **直接案例：** 将程序实例映射到 GPU 工作单元 | num_warps、threads per warp、layout | [GitHub](https://github.com/triton-lang/triton) |
+| ROCm HIP | **关联案例：** 展示 AMD 平台的 work-group 与 wavefront 概念 | work-group、wavefront、compute unit | [GitHub](https://github.com/ROCm/HIP) |
