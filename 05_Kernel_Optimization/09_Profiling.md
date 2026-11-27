@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![09_Profiling 可视化](../images/05_Kernel_Optimization/09_Profiling.svg)
+
+*图：先用系统时间线定位目标 Kernel，再用细粒度指标分析计算、内存和 Warp 调度瓶颈，最后基于证据选择优化方向。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![GPU Profiler 分析维度](../images/05_Kernel_Optimization/09_Profiling.svg)
 
 *图：性能分析从端到端时间线定位目标 Kernel，再查看 Kernel 内部的计算、内存、Warp 和资源指标。先定位问题，再选择适当的细粒度分析工具。*
