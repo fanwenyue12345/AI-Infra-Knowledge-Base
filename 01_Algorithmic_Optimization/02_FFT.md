@@ -16,10 +16,6 @@
 
 ![02_FFT 可视化](../images/01_Algorithmic_Optimization/02_FFT.svg)
 
-*相关成熟资料：CMU 的 FFT 蝶形分解教学资料，详见[原始链接](https://www.cs.cmu.edu/~15322/book/ch08/05.html)。*
-
-*图源：Carnegie Mellon University, 15-322 Intro to Computer Music, Fig. 45。该图展示 8 点 Radix-2 FFT 的偶数/奇数子变换与蝶形合并。参见[原始课程页面](https://www.cs.cmu.edu/~15322/book/ch08/05.html)。*
-
 *图：上方为示意混合信号的时间域波形，下方为频域幅度谱。频谱峰表示信号中的主要频率成分；此图用于建立时域与频域的直觉，不代表某一特定采样数据的精确 FFT 结果。*
 
 ### 2.2 数学原理与核心技术
