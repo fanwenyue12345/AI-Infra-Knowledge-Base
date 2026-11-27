@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![08_Code_Generation 可视化](../images/06_Compiler_Optimization/08_Code_Generation.svg)
+
+*图：优化后的 IR 经指令选择、寄存器分配、调度和目标文件生成，成为目标 ISA 可执行的代码。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![代码生成过程](../images/06_Compiler_Optimization/08_Code_Generation.svg)
 
 *图：优化后的 IR 经指令选择和寄存器分配，再进行指令调度与汇编/链接，形成目标设备可执行代码。具体阶段顺序依编译器而异。*
