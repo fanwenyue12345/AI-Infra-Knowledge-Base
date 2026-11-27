@@ -2,20 +2,20 @@
 
 **System & Distributed Optimization**
 
-本目录研究训练与推理系统中的执行、通信、内存管理和请求调度，关注单个算子之外的端到端性能。
+本目录研究训练与推理系统中的图执行、集合通信、梯度同步、状态分片、请求调度、KV Cache 管理和端到端性能。八篇专题已建立第一轮内容初稿。
 
 ## 专题索引
 
 | 编号 | 专题 | 状态 |
 |---:|---|---|
-| 1 | [CUDA Graph](01_CUDA_Graph.md) | 待共同设计 |
-| 2 | [NCCL](02_NCCL.md) | 待共同设计 |
-| 3 | [AllReduce](03_AllReduce.md) | 待共同设计 |
-| 4 | [通信与计算重叠](04_Communication_Compute_Overlap.md) | 待共同设计 |
-| 5 | [DeepSpeed ZeRO](05_DeepSpeed_ZeRO.md) | 待共同设计 |
-| 6 | [Continuous Batching（连续批处理）](06_Continuous_Batching.md) | 待共同设计 |
-| 7 | [KV Cache](07_KV_Cache.md) | 待共同设计 |
-| 8 | [端到端性能](08_End_to_End_Performance.md) | 待共同设计 |
+| 1 | [CUDA Graph](01_CUDA_Graph.md) | 已建立初稿 |
+| 2 | [NCCL](02_NCCL.md) | 已建立初稿 |
+| 3 | [AllReduce](03_AllReduce.md) | 已建立初稿 |
+| 4 | [通信与计算重叠](04_Communication_Compute_Overlap.md) | 已建立初稿 |
+| 5 | [DeepSpeed ZeRO](05_DeepSpeed_ZeRO.md) | 已建立初稿 |
+| 6 | [Continuous Batching（连续批处理）](06_Continuous_Batching.md) | 已建立初稿 |
+| 7 | [KV Cache](07_KV_Cache.md) | 已建立初稿 |
+| 8 | [端到端性能](08_End_to_End_Performance.md) | 已建立初稿 |
 
 ## 统一专题写作与可视化规范
 
