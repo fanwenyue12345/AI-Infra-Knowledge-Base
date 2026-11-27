@@ -14,7 +14,7 @@
 | 4 | [图编译](04_Graph_Compilation.md) | 待共同设计 |
 | 5 | [编译器算子融合](05_Compiler_Operator_Fusion.md) | 待共同设计 |
 | 6 | [Layout Transformation（布局变换）](06_Layout_Transformation.md) | 待共同设计 |
-| 7 | [Auto-Tuning（自动调优）](07_Auto_Tuning.md) | 待共同设计 |
+| 7 | [Auto-Tuning（自动调优）](07_Auto_Tuning.md) | 已建立初稿 |
 | 8 | [代码生成](08_Code_Generation.md) | 待共同设计 |
 | 9 | [跨硬件编译](09_Cross_Hardware_Compilation.md) | 待共同设计 |
 
