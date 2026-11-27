@@ -2,19 +2,19 @@
 
 **Memory Optimization**
 
-本目录用于系统学习和研究03 内存优化。本阶段先建立专题目录与文档入口；每篇的具体内容、深度和案例由后续逐项讨论确定。
+本目录研究 GPU 与高性能计算中的数据存储层级、访问模式、数据复用、分块计算、性能建模和显存分配。七篇专题已建立第一轮内容初稿。
 
 ## 专题索引
 
 | 编号 | 专题 | 状态 |
 |---:|---|---|
-| 01 | [GPU 存储层级](01_GPU_Memory_Hierarchy.md) | 待共同设计 |
-| 02 | [内存访问](02_Memory_Access.md) | 待共同设计 |
-| 03 | [数据复用](03_Data_Reuse.md) | 待共同设计 |
-| 04 | [分块计算（Tiling / Blocking）](04_Tiling_and_Blocking.md) | 待共同设计 |
-| 05 | [Roofline Model](05_Roofline_Model.md) | 待共同设计 |
-| 06 | [Arithmetic Intensity（算术强度）](06_Arithmetic_Intensity.md) | 待共同设计 |
-| 07 | [显存管理](07_Memory_Management.md) | 待共同设计 |
+| 01 | [GPU 存储层级](01_GPU_Memory_Hierarchy.md) | 已建立初稿 |
+| 02 | [内存访问](02_Memory_Access.md) | 已建立初稿 |
+| 03 | [数据复用](03_Data_Reuse.md) | 已建立初稿 |
+| 04 | [分块计算（Tiling / Blocking）](04_Tiling_and_Blocking.md) | 已建立初稿 |
+| 05 | [Roofline Model](05_Roofline_Model.md) | 已建立初稿 |
+| 06 | [Arithmetic Intensity（算术强度）](06_Arithmetic_Intensity.md) | 已建立初稿 |
+| 07 | [显存管理](07_Memory_Management.md) | 已建立初稿 |
 
 ## 统一专题写作与可视化规范
 
