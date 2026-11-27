@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![Implicit function theorem curve](https://web.maths.unsw.edu.au/~potapov/2111_course_notes/resources/JKress-diagrammes/implicit-theorem-2-300dpi.png)
+![07_Implicit_Differentiation 可视化](../images/01_Algorithmic_Optimization/07_Implicit_Differentiation.svg)
+
+*相关成熟资料：UNSW 隐函数定理课程讲义，详见[原始链接](https://web.maths.unsw.edu.au/~potapov/2111_course_notes/Implicit-function-theorem_002c-sketch-of-proof.html)。*
 
 *图源：UNSW MATH2111 课程讲义。蓝色曲线表示约束 $g(x,y)=0$ 所定义的局部解关系；该图用于理解隐函数定理的局部解几何，不直接表示导数切线。参见[原始讲义](https://web.maths.unsw.edu.au/~potapov/2111_course_notes/Implicit-function-theorem_002c-sketch-of-proof.html)。*
 
