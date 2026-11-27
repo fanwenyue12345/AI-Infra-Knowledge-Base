@@ -1,39 +1,60 @@
 # 流水线
 
-- **所属分类：** [05 Kernel 优化](README.md)
-- **专题编号：** 08
-- **状态：** 待共同设计与编写
+**所属分类：** [05 Kernel 优化](README.md)  
+**英文名称：** GPU Kernel Pipelining  
+**专题编号：** 08
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** Kernel 流水线是把数据加载、计算和结果写回等阶段组织成可重叠的执行过程，使不同 Tile 或任务在不同硬件阶段并行推进。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 隐藏数据搬运和指令执行之间的等待，提高计算单元与内存传输单元的利用率。典型方法包括预取、双缓冲、异步拷贝和多阶段 Pipeline。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![Kernel 流水线](../images/05_Kernel_Optimization/08_Pipelining.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：单缓冲执行时加载和计算阶段串行；多缓冲流水线中，计算当前 Tile 的同时可预取下一 Tile。真实重叠程度取决于硬件、依赖和资源。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、硬件机制、实现流程和关键参数。
+假设每个 Tile 的加载时间为 $T_L$，计算时间为 $T_C$。若完全串行处理 $n$ 个 Tile：
 
-## 5. 经典项目与案例
+$$
+T_{serial}=n(T_L+T_C).
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+理想双阶段流水线在稳定阶段可以接近每个 Tile 用时：
 
-## 6. 实验与性能验证
+$$
+T_{tile}\approx\max(T_L,T_C),
+$$
 
-待讨论：验证方法、指标、测试条件和结果解释。
+总时间近似为：
 
-## 7. 我们的理解与研究问题
+$$
+T_{pipeline}\approx T_L+T_C+(n-1)\max(T_L,T_C).
+$$
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+这是忽略启动、排空、同步、资源竞争和带宽争用的简化模型。
 
-## 参考资料
+**核心技术：**
+- **Prefetching：** 在当前计算完成前提前请求下一块数据。
+- **Double Buffering：** 两个缓冲区交替承担加载与计算。
+- **Multi-stage Pipeline：** 使用多个缓冲阶段增加在途工作量。
+- **Async Copy：** 使用硬件支持的异步数据搬运接口。
+- **Producer–Consumer Synchronization：** 使用屏障或阶段计数确保数据就绪后再消费。
+- **Warp Specialization：** 在适用架构和实现中，让不同 Warp 组承担加载与计算等不同角色。
 
-待补充：优先使用原始论文、官方文档和项目源码。
+流水线阶段越多不一定越快。额外缓冲区占用共享内存，异步同步机制也有成本；若计算或数据传输本身无法并行，流水线收益会受到限制。
+
+## 03. 代表案例
+
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| CUTLASS | **直接案例：** GEMM 中采用多阶段数据搬运与计算流水线 | pipeline stages、producer/consumer、warp specialization | [GitHub](https://github.com/NVIDIA/cutlass) |
+| CUDA Programming Guide | **权威资料：** 介绍异步拷贝、屏障和执行依赖 | asynchronous operations、barrier、TMA（支持架构） | [官方文档](https://docs.nvidia.com/cuda/cuda-c-programming-guide/) |
+| Triton | **直接案例：** 通过 num_stages 等编译配置和编程结构进行软件流水 | software pipelining、matmul tutorial | [GitHub](https://github.com/triton-lang/triton) |
+| FlashAttention | **关联案例：** 将 Q/K/V 加载、Attention 计算与在线累积组织为分块流水 | IO-aware tiling、prefetch、online softmax | [GitHub](https://github.com/Dao-AILab/flash-attention) |
