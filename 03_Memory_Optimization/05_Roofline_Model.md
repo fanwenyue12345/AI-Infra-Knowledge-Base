@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![Roofline Model](../images/03_Memory_Optimization/05_Roofline_Model.svg)
 
-*图：横轴为算术强度 FLOPs/Byte，纵轴为可达到的计算性能。斜线区域受内存带宽约束，水平区域受峰值计算能力约束；两者交点为 Ridge Point。图为概念曲线，非某一 GPU 的实测数据。*
 
 ### 2.2 数学原理与核心技术
 
