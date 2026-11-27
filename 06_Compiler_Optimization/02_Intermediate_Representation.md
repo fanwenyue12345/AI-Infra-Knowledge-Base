@@ -1,39 +1,48 @@
 # 中间表示（IR）
 
-- **所属分类：** [06 编译器优化](README.md)
-- **专题编号：** 02
-- **状态：** 待共同设计与编写
+**所属分类：** [06 编译器优化](README.md)  
+**英文名称：** Intermediate Representation  
+**专题编号：** 02
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** 中间表示（IR）是编译器在源语言与目标机器指令之间使用的结构化程序表示，用于承载运算、数据类型、控制流和依赖关系。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 将源语言的多样性与目标硬件的复杂性解耦，让优化 Pass 可以在统一表示上工作，并支持同一程序逐层转换到不同硬件。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![IR 层级表示](../images/06_Compiler_Optimization/02_Intermediate_Representation.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：同一计算可以先以高层张量操作表示，再降低为循环和内存操作，最后变成接近机器指令的低层 IR。不同 IR 保留的信息和可优化范围不同。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、编译流程、实现机制和关键参数。
+例如：
 
-## 5. 经典项目与案例
+$$
+y=(x+b)\times s
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+高层 IR 可以把它表示为张量加法和乘法；较低层 IR 则可能展开为循环、索引和标量指令。
 
-## 6. 实验与性能验证
+常见 IR 形式：
+- **AST（Abstract Syntax Tree）：** 保留源代码语法结构，适合前端语义分析。
+- **CFG（Control Flow Graph）：** 以基本块和控制流边表示程序执行路径。
+- **SSA（Static Single Assignment）：** 每个变量只赋值一次，通过 Phi 节点合并不同控制流路径上的值。
+- **LLVM IR：** 面向通用编译优化的低层、类型化 SSA 表示。
+- **MLIR Dialect：** 允许在同一框架中定义不同抽象层级的操作集合。
+- **Tensor / Graph IR：** 以张量算子和数据依赖描述机器学习计算。
 
-待讨论：验证方法、指标、基线、测试条件和结果解释。
+IR 的设计需要权衡抽象能力与优化可见性。高层 IR 保留张量、卷积、Attention 等语义，便于做领域优化；低层 IR 更接近硬件，便于寄存器分配、指令选择和代码生成。
 
-## 7. 我们的理解与研究问题
+## 03. 代表案例
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
-
-## 参考资料
-
-待补充：优先使用原始论文、官方文档和项目源码。
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| LLVM IR | **直接案例：** 经典 SSA 风格低层 IR | Module、Function、Basic Block、Instruction、Phi | [文档](https://llvm.org/docs/LangRef.html) |
+| MLIR | **直接案例：** 支持多层级、可扩展 IR 与 Dialect | Operation、Region、Block、Dialect | [GitHub](https://github.com/llvm/llvm-project) · [文档](https://mlir.llvm.org/) |
+| OpenXLA HLO | **直接案例：** 以高层张量运算表示机器学习计算图 | HLO instruction、computation、shape | [GitHub](https://github.com/openxla/xla) · [文档](https://openxla.org/xla/hlo_passes) |
+| TVM TensorIR | **直接案例：** 表示张量程序、循环和内存访问 | PrimFunc、Block、Buffer、Schedule | [GitHub](https://github.com/apache/tvm) · [文档](https://tvm.apache.org/docs/) |
