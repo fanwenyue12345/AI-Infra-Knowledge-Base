@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![重计算可视化](../images/02_Computation_Graph_Optimization/05_Recomputation.svg)
+![PyTorch activation checkpointing diagram](https://pytorch.org/wp-content/uploads/2025/03/fg5.png)
+
+*图源：PyTorch 官方博客《Current and New Activation Checkpointing Techniques in PyTorch》。展示 activation checkpoint 区域如何减少保存的中间张量，并在反向阶段重新计算。参见[官方原文](https://pytorch.org/blog/activation-checkpointing-techniques/)。*
 
 *图：普通训练保存所有层的激活；Checkpointing 只保存部分检查点，在反向阶段重新计算区间内的激活，以计算换取显存。*
 
