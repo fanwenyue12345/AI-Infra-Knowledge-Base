@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![04_Graph_Compilation 可视化](../images/06_Compiler_Optimization/04_Graph_Compilation.svg)
+
+*图：框架算子被捕获成图，经过图重写与分区，再由目标后端生成可执行代码；动态控制流可能产生 graph break 或回退。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![图编译过程](../images/06_Compiler_Optimization/04_Graph_Compilation.svg)
 
 *图：框架中的算子调用被捕获成计算图，编译器在图上进行变换，再将子图编译为目标设备可执行代码。*
