@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![Tensor Core 矩阵乘加](../images/05_Kernel_Optimization/07_Tensor_Core.svg)
 
-*图：Tensor Core 执行矩阵乘加，将输入矩阵块相乘并累加到输出累加器。图示强调矩阵级运算，不表示固定的硬件 Tile 尺寸。*
 
 ### 2.2 数学原理与核心技术
 
