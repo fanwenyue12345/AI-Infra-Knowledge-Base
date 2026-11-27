@@ -1,39 +1,48 @@
 # Lowering（逐层降低）
 
-- **所属分类：** [06 编译器优化](README.md)
-- **专题编号：** 03
-- **状态：** 待共同设计与编写
+**所属分类：** [06 编译器优化](README.md)  
+**英文名称：** Compiler Lowering  
+**专题编号：** 03
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** Lowering 是把高层、抽象的程序表示逐步转换为更低层、更接近目标硬件执行机制的表示过程。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 将高级张量算子、循环和并行抽象逐步落实为显式的数据类型、内存访问、线程映射和机器指令，同时在每个层级保留适合该层优化的信息。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![编译 Lowering 层级](../images/06_Compiler_Optimization/03_Lowering.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：高层张量算子逐步变成循环/索引、线程与内存操作，再转成目标指令。实际编译器的层级和顺序因框架与后端不同。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、编译流程、实现机制和关键参数。
+例如矩阵乘法：
 
-## 5. 经典项目与案例
+$$
+C_{ij}=\sum_k A_{ik}B_{kj}
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+在高层 IR 中可以是一个 MatMul 操作；Lowering 后逐步展开为 Tile 循环、线程索引、向量加载、乘加指令和存储操作。
 
-## 6. 实验与性能验证
+**核心技术：**
+- **Dialect Conversion：** 将一种 IR Dialect 的操作转换为另一种 Dialect。
+- **Loop Lowering：** 将张量计算转换为循环嵌套与迭代空间。
+- **Vectorization：** 将标量操作转换为向量或硬件矩阵指令。
+- **Memory Lowering：** 明确数据所在存储空间、地址计算和读写操作。
+- **Parallel Mapping：** 将循环迭代映射到 Thread、Warp、Block 或设备网格。
+- **Instruction Selection：** 将低层操作匹配为目标 ISA 指令。
 
-待讨论：验证方法、指标、基线、测试条件和结果解释。
+Lowering 不是简单地“降低抽象程度”。过早 Lowering 可能丢失高层语义，使后续难以识别融合、稀疏或矩阵结构。因此编译器通常会在不同层级之间安排优化 Pass。
 
-## 7. 我们的理解与研究问题
+## 03. 代表案例
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
-
-## 参考资料
-
-待补充：优先使用原始论文、官方文档和项目源码。
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| MLIR | **直接案例：** 通过 Dialect Conversion 和 Pass 完成逐层转换 | Linalg、Affine、SCF、MemRef、LLVM Dialect | [文档](https://mlir.llvm.org/docs/DialectConversion/) |
+| Triton | **直接案例：** 将块级张量程序降低为 GPU 专用表示和指令 | Triton IR、TritonGPU、LLVM IR、PTX | [GitHub](https://github.com/triton-lang/triton) |
+| TVM | **直接案例：** 从 TensorIR 调度表示降低到目标后端代码 | TensorIR、TIR transformations、codegen | [GitHub](https://github.com/apache/tvm) |
+| IREE | **直接案例：** 基于 MLIR 的端到端机器学习编译器，包含多层转换 | Flow、HAL、Linalg、LLVMGPU 等层级 | [GitHub](https://github.com/iree-org/iree) |
