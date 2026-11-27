@@ -1,39 +1,54 @@
 # 通信与计算重叠
 
-- **所属分类：** [08 系统与分布式优化](README.md)
-- **专题编号：** 04
-- **状态：** 待共同设计与编写
+**所属分类：** [08 系统与分布式优化](README.md)  
+**英文名称：** Communication–Compute Overlap  
+**专题编号：** 04
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** 通信与计算重叠是在满足数据依赖的前提下，让 GPU 计算和设备间通信在时间上并行推进。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 隐藏部分通信等待时间，减少分布式训练和模型并行中的设备空闲，提高端到端吞吐。本专题从系统角度关注通信库、运行时 Stream、梯度就绪时机和硬件互联如何共同实现重叠。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？系统中存在什么瓶颈？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![通信计算重叠时间线](../images/08_System_Optimization/04_Communication_Compute_Overlap.svg)
 
-待讨论：执行模型、公式、通信/存储机制、变量含义、适用条件和局限。
+*图：某层梯度完成后即可启动该 Bucket 的 AllReduce，同时反向计算继续处理更早层的梯度。重叠区间越大，潜在可隐藏的通信时间越多。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：框架、API、运行时、数据结构、部署流程和关键参数。
+若计算耗时为 $T_{comp}$，通信耗时为 $T_{comm}$，完全串行时：
 
-## 5. 经典项目与案例
+$$
+T_{serial}=T_{comp}+T_{comm}.
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+若通信与计算完全独立且能够充分重叠，理想下界为：
 
-## 6. 实验与性能验证
+$$
+T_{overlap}\geq\max(T_{comp},T_{comm}).
+$$
 
-待讨论：端到端吞吐、延迟、显存、通信开销、基线和测试条件。
+实际执行还包括依赖等待、调度、同步与资源竞争。若通信与计算共享链路、内存带宽或 SM 资源，重叠可能影响双方速度。
 
-## 7. 我们的理解与研究问题
+**核心技术：**
+- **Non-blocking Communication：** 提交通信后允许 CPU 或 GPU 安排其他独立工作。
+- **CUDA Streams / Events：** 组织不同工作队列，并用事件表达跨 Stream 依赖。
+- **Gradient Bucketing：** 梯度按 Bucket 聚合，某个 Bucket 就绪后即可开始通信。
+- **NCCL Collectives：** 通过 AllReduce、AllGather、ReduceScatter 执行数据交换。
+- **Double Buffering：** 在一块缓冲区处理数据时，另一块缓冲区传输下一批数据。
+- **Dependency Management：** 确保通信读取的数据已准备好，通信结果在消费者使用前已完成。
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+异步 API 只表示提交方式不必阻塞主机，不等于设备上必然发生有效重叠。需要通过时间线 Profiler 检查通信与 Kernel 是否真正并行，以及是否因资源竞争导致总时间反而增加。
 
-## 参考资料
+## 03. 代表案例
 
-待补充：优先使用原始论文、官方文档和项目源码。
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| PyTorch DistributedDataParallel | **直接案例：** 在反向计算过程中逐 Bucket 启动梯度同步 | Reducer、bucket readiness、communication hooks | [GitHub](https://github.com/pytorch/pytorch) · [DDP 文档](https://docs.pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html) |
+| NCCL | **基础组件：** 提供可关联 CUDA Stream 的 GPU 集合通信 | collectives、stream semantics | [GitHub](https://github.com/NVIDIA/nccl) |
+| Megatron-LM | **直接案例：** 在 TP/PP 训练中安排通信和计算执行顺序 | overlap、pipeline schedule、communication groups | [GitHub](https://github.com/NVIDIA/Megatron-LM) |
+| DeepSpeed | **直接案例：** 分布式训练中的通信调度与参数分片 | overlap communication、ZeRO communication | [GitHub](https://github.com/deepspeedai/DeepSpeed) |
