@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+<rect width="1200" height="650" rx="24" fill="#f8fafc"/>
+<text x="600" y="50" text-anchor="middle" font-family="Arial" font-size="30" font-weight="700" fill="#172554">Implicit solution u(θ): sensitivity from the solution curve</text>
+<line x1="140" y1="510" x2="1080" y2="510" stroke="#475569" stroke-width="3"/><line x1="140" y1="510" x2="140" y2="115" stroke="#475569" stroke-width="3"/>
+<path d="M150 470 C300 440 390 380 500 330 S760 245 1040 150" fill="none" stroke="#2563eb" stroke-width="6"/>
+<circle cx="650" cy="285" r="10" fill="#e11d48"/>
+<line x1="500" y1="365" x2="800" y2="205" stroke="#e11d48" stroke-width="4" stroke-dasharray="10 7"/>
+<line x1="650" y1="285" x2="650" y2="510" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 7"/>
+<line x1="140" y1="285" x2="650" y2="285" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 7"/>
+<text x="1100" y="530" font-family="Arial" font-size="22" fill="#334155">θ</text>
+<text x="105" y="115" font-family="Arial" font-size="22" fill="#334155">u</text>
+<text x="670" y="275" font-family="Arial" font-size="20" fill="#be123c"> (θ₀, u₀)</text>
+<text x="665" y="465" font-family="Arial" font-size="18" fill="#64748b">θ₀</text>
+<text x="165" y="270" font-family="Arial" font-size="18" fill="#64748b">u₀</text>
+<text x="835" y="200" font-family="Arial" font-size="20" fill="#be123c">tangent slope = du/dθ</text>
+<rect x="720" y="350" width="370" height="105" rx="14" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+<text x="905" y="390" text-anchor="middle" font-family="Arial" font-size="20" fill="#075985">F(u, θ) = 0</text>
+<text x="905" y="425" text-anchor="middle" font-family="Arial" font-size="20" fill="#075985">Fᵤ du/dθ + Fθ = 0</text>
+<text x="600" y="590" text-anchor="middle" font-family="Arial" font-size="18" fill="#475569">The solution is defined by a constraint; its local sensitivity is the slope of u as θ changes.</text>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+<rect width="1200" height="620" rx="24" fill="#f8fafc"/>
+<text x="600" y="50" text-anchor="middle" font-family="Arial" font-size="30" font-weight="700" fill="#172554">Low-rank approximation: retain dominant structure</text>
+<text x="195" y="105" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="#334155">Original matrix A</text>
+<text x="600" y="105" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="#334155">Singular-value spectrum</text>
+<text x="1000" y="105" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="#334155">Rank-r reconstruction</text>
+<g transform="translate(85 145)">
+<rect width="220" height="220" fill="#dbeafe" stroke="#64748b"/>
+<g fill="#2563eb"><rect x="0" y="0" width="55" height="55"/><rect x="55" y="0" width="55" height="55" opacity=".5"/><rect x="110" y="55" width="55" height="55"/><rect x="165" y="55" width="55" height="55" opacity=".5"/><rect x="0" y="110" width="55" height="55" opacity=".5"/><rect x="55" y="165" width="55" height="55"/><rect x="110" y="110" width="55" height="55" opacity=".6"/></g>
+<g stroke="#fff" stroke-width="2"><path d="M55 0V220 M110 0V220 M165 0V220 M0 55H220 M0 110H220 M0 165H220"/></g>
+</g>
+<g transform="translate(420 145)">
+<line x1="0" y1="220" x2="350" y2="220" stroke="#64748b" stroke-width="2"/><line x1="0" y1="0" x2="0" y2="220" stroke="#64748b" stroke-width="2"/>
+<path d="M10 15 C45 55 70 100 110 145 S210 195 340 210" fill="none" stroke="#7c3aed" stroke-width="5"/>
+<g fill="#7c3aed"><circle cx="10" cy="15" r="6"/><circle cx="45" cy="75" r="6"/><circle cx="80" cy="120" r="6"/><circle cx="115" cy="150" r="6"/><circle cx="150" cy="170" r="6"/><circle cx="185" cy="185" r="6"/><circle cx="220" cy="195" r="6"/><circle cx="255" cy="201" r="6"/><circle cx="290" cy="206" r="6"/><circle cx="340" cy="210" r="6"/></g>
+<line x1="115" y1="0" x2="115" y2="220" stroke="#f97316" stroke-width="2" stroke-dasharray="7 6"/>
+<text x="125" y="25" font-family="Arial" font-size="17" fill="#c2410c">retain top r</text>
+<text x="175" y="255" text-anchor="middle" font-family="Arial" font-size="16" fill="#64748b">singular-value index</text>
+</g>
+<g transform="translate(890 145)">
+<rect width="220" height="220" fill="#dbeafe" stroke="#64748b"/>
+<g fill="#2563eb"><rect x="0" y="0" width="55" height="55"/><rect x="55" y="0" width="55" height="55" opacity=".45"/><rect x="110" y="55" width="55" height="55"/><rect x="165" y="55" width="55" height="55" opacity=".45"/><rect x="0" y="110" width="55" height="55" opacity=".45"/><rect x="55" y="165" width="55" height="55"/><rect x="110" y="110" width="55" height="55" opacity=".55"/></g>
+<g stroke="#fff" stroke-width="2"><path d="M55 0V220 M110 0V220 M165 0V220 M0 55H220 M0 110H220 M0 165H220"/></g>
+</g>
+<text x="600" y="440" text-anchor="middle" font-family="Arial" font-size="22" fill="#334155">A = UΣVᵀ  →  Aᵣ = UᵣΣᵣVᵣᵀ</text>
+<text x="600" y="485" text-anchor="middle" font-family="Arial" font-size="19" fill="#475569">Keep the dominant singular directions; discard smaller components.</text>
+<text x="600" y="535" text-anchor="middle" font-family="Arial" font-size="17" fill="#64748b">Conceptual illustration. A real reconstruction depends on the matrix and chosen rank r.</text>
+</svg>

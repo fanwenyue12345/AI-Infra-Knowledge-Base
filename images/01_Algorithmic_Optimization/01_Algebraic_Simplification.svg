@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+<rect width="1200" height="620" rx="24" fill="#f8fafc"/>
+<text x="600" y="55" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="#172554">Matrix-chain multiplication: same result, different cost</text>
+<rect x="45" y="95" width="535" height="460" rx="18" fill="#ecfdf5" stroke="#10b981" stroke-width="3"/>
+<rect x="620" y="95" width="535" height="460" rx="18" fill="#fff1f2" stroke="#fb7185" stroke-width="3"/>
+<text x="312" y="140" text-anchor="middle" font-family="Arial" font-size="25" font-weight="700" fill="#047857">Plan A: compute AB first</text>
+<text x="887" y="140" text-anchor="middle" font-family="Arial" font-size="25" font-weight="700" fill="#be123c">Plan B: compute BC first</text>
+<g font-family="Arial" text-anchor="middle" font-size="23" fill="#0f172a">
+<rect x="105" y="180" width="145" height="72" rx="12" fill="#fff" stroke="#64748b"/><text x="177" y="224">A 10×1000</text>
+<text x="275" y="225" font-size="28">×</text>
+<rect x="300" y="180" width="145" height="72" rx="12" fill="#fff" stroke="#64748b"/><text x="372" y="224">B 1000×10</text>
+<path d="M275 265 V300" stroke="#047857" stroke-width="4"/><path d="M265 290 L275 302 L285 290" fill="none" stroke="#047857" stroke-width="4"/>
+<rect x="185" y="315" width="255" height="70" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/><text x="312" y="358">AB → 10×10</text>
+<text x="312" y="425" font-size="20" fill="#047857">Then multiply by C (10×1000)</text>
+<text x="312" y="475" font-size="27" font-weight="700" fill="#047857">400,000 FLOPs</text>
+<text x="312" y="515" font-size="19" fill="#047857">Small intermediate matrix</text>
+<rect x="680" y="180" width="145" height="72" rx="12" fill="#fff" stroke="#64748b"/><text x="752" y="224">B 1000×10</text>
+<text x="850" y="225" font-size="28">×</text>
+<rect x="875" y="180" width="145" height="72" rx="12" fill="#fff" stroke="#64748b"/><text x="947" y="224">C 10×1000</text>
+<path d="M850 265 V300" stroke="#be123c" stroke-width="4"/><path d="M840 290 L850 302 L860 290" fill="none" stroke="#be123c" stroke-width="4"/>
+<rect x="760" y="315" width="255" height="70" rx="12" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/><text x="887" y="358">BC → 1000×1000</text>
+<text x="887" y="425" font-size="20" fill="#be123c">Then multiply by A (10×1000)</text>
+<text x="887" y="475" font-size="27" font-weight="700" fill="#be123c">40,000,000 FLOPs</text>
+<text x="887" y="515" font-size="19" fill="#be123c">Large intermediate matrix</text>
+</g>
+<text x="600" y="590" text-anchor="middle" font-family="Arial" font-size="19" fill="#475569">Associativity preserves the real-arithmetic result; choosing the order changes the computational cost.</text>
+</svg>

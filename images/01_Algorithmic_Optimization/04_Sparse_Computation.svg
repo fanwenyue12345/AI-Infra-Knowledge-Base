@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+<rect width="1200" height="650" rx="24" fill="#f8fafc"/>
+<text x="600" y="48" text-anchor="middle" font-family="Arial" font-size="30" font-weight="700" fill="#172554">Sparse matrix: store nonzeros and their positions</text>
+<text x="220" y="110" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="#334155">Dense matrix</text>
+<text x="600" y="110" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="#334155">Nonzero coordinates</text>
+<text x="970" y="110" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="#334155">COO representation</text>
+<g transform="translate(90 150)" font-family="Arial" text-anchor="middle" font-size="20">
+<g stroke="#94a3b8" stroke-width="2" fill="#fff">
+<rect x="0" y="0" width="260" height="260"/><path d="M65 0V260 M130 0V260 M195 0V260 M0 65H260 M0 130H260 M0 195H260"/>
+</g>
+<g fill="#2563eb"><rect x="65" y="0" width="65" height="65"/><rect x="0" y="65" width="65" height="65"/><rect x="130" y="130" width="65" height="65"/></g>
+<g fill="#0f172a"><text x="32" y="42">0</text><text x="97" y="42" fill="#fff">5</text><text x="162" y="42">0</text><text x="227" y="42">0</text><text x="32" y="107" fill="#fff">2</text><text x="97" y="107">0</text><text x="162" y="107">0</text><text x="227" y="107">0</text><text x="32" y="172">0</text><text x="97" y="172">0</text><text x="162" y="172" fill="#fff">7</text><text x="227" y="172">0</text><text x="32" y="237">0</text><text x="97" y="237">0</text><text x="162" y="237">0</text><text x="227" y="237">0</text></g>
+</g>
+<path d="M385 280 H445" stroke="#64748b" stroke-width="4"/><path d="M435 270 L447 280 L435 290" fill="none" stroke="#64748b" stroke-width="4"/>
+<g transform="translate(500 175)" font-family="Arial" font-size="20" fill="#0f172a">
+<text x="0" y="0">row</text><text x="105" y="0">col</text><text x="210" y="0">value</text>
+<g fill="#dbeafe"><rect x="-10" y="18" width="280" height="52" rx="8"/><rect x="-10" y="82" width="280" height="52" rx="8"/><rect x="-10" y="146" width="280" height="52" rx="8"/></g>
+<text x="0" y="53">0</text><text x="105" y="53">1</text><text x="210" y="53">5</text>
+<text x="0" y="117">1</text><text x="105" y="117">0</text><text x="210" y="117">2</text>
+<text x="0" y="181">2</text><text x="105" y="181">2</text><text x="210" y="181">7</text>
+</g>
+<path d="M800 280 H850" stroke="#64748b" stroke-width="4"/><path d="M840 270 L852 280 L840 290" fill="none" stroke="#64748b" stroke-width="4"/>
+<g transform="translate(875 170)" font-family="Arial" font-size="19" fill="#0f172a">
+<text x="0" y="0" font-weight="700">row = [0, 1, 2]</text>
+<text x="0" y="62" font-weight="700">col = [1, 0, 2]</text>
+<text x="0" y="124" font-weight="700">data = [5, 2, 7]</text>
+<text x="0" y="200" fill="#047857">3 nonzeros</text>
+<text x="0" y="235" fill="#64748b">+ index storage</text>
+</g>
+<rect x="100" y="475" width="1000" height="105" rx="14" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+<text x="600" y="515" text-anchor="middle" font-family="Arial" font-size="21" font-weight="700" fill="#047857">Dense: 16 values  |  COO: 3 values + 3 row indices + 3 column indices</text>
+<text x="600" y="550" text-anchor="middle" font-family="Arial" font-size="17" fill="#475569">Illustrative 4×4 matrix. Sparse storage saves value storage here only if index overhead is accounted for.</text>
+</svg>

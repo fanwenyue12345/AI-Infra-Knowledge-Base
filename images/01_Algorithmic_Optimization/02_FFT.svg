@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+<rect width="1200" height="760" rx="24" fill="#f8fafc"/>
+<text x="600" y="48" text-anchor="middle" font-family="Arial" font-size="30" font-weight="700" fill="#172554">From a mixed signal to its frequency components</text>
+<text x="75" y="100" font-family="Arial" font-size="22" font-weight="700" fill="#334155">Time domain</text>
+<line x1="90" y1="260" x2="1100" y2="260" stroke="#94a3b8" stroke-width="2"/><line x1="90" y1="125" x2="90" y2="260" stroke="#94a3b8" stroke-width="2"/>
+<path d="M90 195 C110 130 130 130 150 195 S190 260 210 195 S250 130 270 195 S310 260 330 195 S370 130 390 195 S430 260 450 195 S490 130 510 195 S550 260 570 195 S610 130 630 195 S670 260 690 195 S730 130 750 195 S790 260 810 195 S850 130 870 195 S910 260 930 195 S970 130 990 195 S1030 260 1050 195 S1090 130 1100 195" fill="none" stroke="#2563eb" stroke-width="4"/>
+<text x="600" y="292" text-anchor="middle" font-family="Arial" font-size="17" fill="#64748b">sample index / time</text>
+<text x="75" y="350" font-family="Arial" font-size="22" font-weight="700" fill="#334155">Frequency domain (magnitude spectrum)</text>
+<line x1="90" y1="630" x2="1100" y2="630" stroke="#94a3b8" stroke-width="2"/><line x1="90" y1="390" x2="90" y2="630" stroke="#94a3b8" stroke-width="2"/>
+<path d="M90 630 L90 620 L110 620 L110 630 M130 630 L130 617 L150 617 L150 630 M170 630 L170 625 L190 625 L190 630 M210 630 L210 610 L230 610 L230 630 M250 630 L250 625 L270 625 L270 630 M290 630 L290 580 L310 580 L310 630 M330 630 L330 620 L350 620 L350 630 M370 630 L370 625 L390 625 L390 630 M410 630 L410 610 L430 610 L430 630 M450 630 L450 625 L470 625 L470 630 M490 630 L490 520 L510 520 L510 630 M530 630 L530 625 L550 625 L550 630 M570 630 L570 615 L590 615 L590 630 M610 630 L610 625 L630 625 L630 630 M650 630 L650 610 L670 610 L670 630 M690 630 L690 625 L710 625 L710 630 M730 630 L730 460 L750 460 L750 630 M770 630 L770 620 L790 620 L790 630 M810 630 L810 625 L830 625 L830 630 M850 630 L850 615 L870 615 L870 630 M890 630 L890 625 L910 625 L910 630 M930 630 L930 400 L950 400 L950 630 M970 630 L970 625 L990 625 L990 630 M1010 630 L1010 620 L1030 620 L1030 630 M1050 630 L1050 625 L1070 625 L1070 630" fill="#60a5fa" stroke="#2563eb" stroke-width="2"/>
+<path d="M500 520 V430" stroke="#0f766e" stroke-width="2"/><text x="500" y="420" text-anchor="middle" font-family="Arial" font-size="18" fill="#0f766e">component 1</text>
+<path d="M740 460 V405" stroke="#0f766e" stroke-width="2"/><text x="740" y="395" text-anchor="middle" font-family="Arial" font-size="18" fill="#0f766e">component 2</text>
+<path d="M940 400 V360" stroke="#0f766e" stroke-width="2"/><text x="940" y="355" text-anchor="middle" font-family="Arial" font-size="18" fill="#0f766e">component 3</text>
+<text x="600" y="700" text-anchor="middle" font-family="Arial" font-size="18" fill="#475569">Illustrative signal and spectrum: peaks indicate frequency components; actual bins depend on sampling and signal design.</text>
+</svg>

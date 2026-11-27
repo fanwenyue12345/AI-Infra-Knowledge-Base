@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+<rect width="1200" height="700" rx="24" fill="#f8fafc"/>
+<text x="600" y="48" text-anchor="middle" font-family="Arial" font-size="30" font-weight="700" fill="#172554">Serial recurrence versus parallel prefix scan</text>
+<text x="75" y="125" font-family="Arial" font-size="23" font-weight="700" fill="#334155">Serial recurrence</text>
+<g font-family="Arial" text-anchor="middle" font-size="20">
+<g fill="#dbeafe" stroke="#2563eb" stroke-width="2"><rect x="90" y="165" width="150" height="65" rx="12"/><rect x="340" y="165" width="150" height="65" rx="12"/><rect x="590" y="165" width="150" height="65" rx="12"/><rect x="840" y="165" width="150" height="65" rx="12"/></g>
+<g fill="#1e3a8a"><text x="165" y="205">s₁ = x₁</text><text x="415" y="205">s₂ = s₁ ⊕ x₂</text><text x="665" y="205">s₃ = s₂ ⊕ x₃</text><text x="915" y="205">s₄ = s₃ ⊕ x₄</text></g>
+<g stroke="#2563eb" stroke-width="4" fill="none"><path d="M240 198 H335 M325 188 L337 198 L325 208"/><path d="M490 198 H585 M575 188 L587 198 L575 208"/><path d="M740 198 H835 M825 188 L837 198 L825 208"/></g>
+</g>
+<text x="75" y="315" font-family="Arial" font-size="23" font-weight="700" fill="#334155">Parallel prefix structure (illustrative tree)</text>
+<g stroke="#0f766e" stroke-width="3" fill="none">
+<path d="M200 385 L350 455 M500 385 L350 455 M700 385 L850 455 M1000 385 L850 455 M350 455 L600 555 M850 455 L600 555"/>
+</g>
+<g fill="#ccfbf1" stroke="#0f766e" stroke-width="2">
+<rect x="125" y="350" width="150" height="55" rx="10"/><rect x="425" y="350" width="150" height="55" rx="10"/><rect x="625" y="350" width="150" height="55" rx="10"/><rect x="925" y="350" width="150" height="55" rx="10"/>
+<rect x="275" y="430" width="150" height="55" rx="10"/><rect x="775" y="430" width="150" height="55" rx="10"/><rect x="525" y="530" width="150" height="55" rx="10"/>
+</g>
+<g font-family="Arial" font-size="20" text-anchor="middle" fill="#134e4a"><text x="200" y="385">x₁</text><text x="500" y="385">x₂</text><text x="700" y="385">x₃</text><text x="1000" y="385">x₄</text><text x="350" y="465">x₁ ⊕ x₂</text><text x="850" y="465">x₃ ⊕ x₄</text><text x="600" y="565">combined</text></g>
+<text x="600" y="635" text-anchor="middle" font-family="Arial" font-size="18" fill="#475569">A scan computes all prefixes; a full scan needs additional stages to produce every prefix output.</text>
+</svg>
