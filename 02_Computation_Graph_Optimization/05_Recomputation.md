@@ -20,7 +20,6 @@
 
 *图源：PyTorch 官方博客《Current and New Activation Checkpointing Techniques in PyTorch》。展示 activation checkpoint 区域如何减少保存的中间张量，并在反向阶段重新计算。参见[官方原文](https://pytorch.org/blog/activation-checkpointing-techniques/)。*
 
-*图：普通训练保存所有层的激活；Checkpointing 只保存部分检查点，在反向阶段重新计算区间内的激活，以计算换取显存。*
 
 ### 2.2 数学原理与核心技术
 
