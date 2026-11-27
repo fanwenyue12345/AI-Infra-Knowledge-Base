@@ -8,49 +8,43 @@
 
 **一句话定义：** 中间表示（IR）是编译器在源语言与目标机器指令之间使用的结构化程序表示，用于承载运算、数据类型、控制流和依赖关系。
 
-**核心目的：** 将源语言的多样性与目标硬件的复杂性解耦，让优化 Pass 可以在统一表示上工作，并支持同一程序逐层转换到不同硬件。
+**核心目的：** 将源语言的多样性与目标硬件的复杂性解耦，使优化可以在统一表示上实施，也让同一前端能够连接多个后端。不同层级的 IR 会保留不同程度的抽象信息。
 
 ## 02. 数学原理与核心技术
 
 ### 2.1 可视化理解
 
-![02_Intermediate_Representation 可视化](../images/06_Compiler_Optimization/02_Intermediate_Representation.svg)
+![编译器多层 IR](../images/06_Compiler_Optimization/02_Intermediate_Representation.svg)
 
-*图：同一矩阵计算可以在高层表示为 MatMul，在中层表示为循环，在低层表示为地址计算、Load、乘加和 Store。*
-
-### 2.2 数学原理与核心技术
-
-### 2.1 可视化理解
-
-![IR 层级表示](../images/06_Compiler_Optimization/02_Intermediate_Representation.svg)
-
-*图：同一计算可以先以高层张量操作表示，再降低为循环和内存操作，最后变成接近机器指令的低层 IR。不同 IR 保留的信息和可优化范围不同。*
+*图：高层 IR 保留张量、算子等领域语义；中层 IR 显式表达循环和内存；低层 IR 更接近目标指令。不同编译器的 IR 层级与名称并不完全相同。*
 
 ### 2.2 数学原理与核心技术
 
-例如：
+例如矩阵乘法：
 
 $$
-y=(x+b)\times s
+C_{ij}=\sum_{k=0}^{K-1}A_{ik}B_{kj}.
 $$
 
-高层 IR 可以把它表示为张量加法和乘法；较低层 IR 则可能展开为循环、索引和标量指令。
+在高层 IR 中，它可能只是一个矩阵乘法算子；在循环层 IR 中，它可能被表示为三层循环；在 GPU 低层 IR 中，则可能进一步体现线程索引、Tile、内存搬运和矩阵指令。
 
-常见 IR 形式：
-- **AST（Abstract Syntax Tree）：** 保留源代码语法结构，适合前端语义分析。
-- **CFG（Control Flow Graph）：** 以基本块和控制流边表示程序执行路径。
-- **SSA（Static Single Assignment）：** 每个变量只赋值一次，通过 Phi 节点合并不同控制流路径上的值。
-- **LLVM IR：** 面向通用编译优化的低层、类型化 SSA 表示。
-- **MLIR Dialect：** 允许在同一框架中定义不同抽象层级的操作集合。
-- **Tensor / Graph IR：** 以张量算子和数据依赖描述机器学习计算。
+**核心技术与概念：**
+- **SSA（Static Single Assignment）：** 每个 SSA 值只定义一次，便于数据流分析和优化。
+- **CFG（Control Flow Graph）：** 用基本块和控制流边表示分支与循环。
+- **Dialect：** MLIR 中针对不同领域或抽象层定义的一组操作、类型和属性。
+- **Operation / Value / Block：** IR 中常见的运算、数据值和基本控制流结构。
+- **High-level / Mid-level / Low-level IR：** 分别保留领域语义、程序结构或硬件执行细节。
+- **IR Verification：** 检查类型、操作约束和结构不变量，防止非法变换继续传播。
 
-IR 的设计需要权衡抽象能力与优化可见性。高层 IR 保留张量、卷积、Attention 等语义，便于做领域优化；低层 IR 更接近硬件，便于寄存器分配、指令选择和代码生成。
+IR 不只是“编译器内部的一种代码格式”。它决定了哪些信息能被分析、哪些优化容易表达，以及不同硬件后端如何共享前端成果。
 
 ## 03. 代表案例
 
 | 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
 |---|---|---|---|
-| LLVM IR | **直接案例：** 经典 SSA 风格低层 IR | Module、Function、Basic Block、Instruction、Phi | [文档](https://llvm.org/docs/LangRef.html) |
-| MLIR | **直接案例：** 支持多层级、可扩展 IR 与 Dialect | Operation、Region、Block、Dialect | [GitHub](https://github.com/llvm/llvm-project) · [文档](https://mlir.llvm.org/) |
-| OpenXLA HLO | **直接案例：** 以高层张量运算表示机器学习计算图 | HLO instruction、computation、shape | [GitHub](https://github.com/openxla/xla) · [文档](https://openxla.org/xla/hlo_passes) |
-| TVM TensorIR | **直接案例：** 表示张量程序、循环和内存访问 | PrimFunc、Block、Buffer、Schedule | [GitHub](https://github.com/apache/tvm) · [文档](https://tvm.apache.org/docs/) |
+| LLVM IR | **直接案例：** 基于 SSA 的低层通用 IR | LLVM Language Reference、CFG、SSA | [文档](https://llvm.org/docs/LangRef.html) · [GitHub](https://github.com/llvm/llvm-project) |
+| MLIR | **直接案例：** 多层、可扩展的 IR 基础设施 | Builtin、Affine、Linalg、GPU、LLVM Dialect | [官网](https://mlir.llvm.org/) |
+| OpenXLA StableHLO | **直接案例：** 用于机器学习计算图交换和编译的高层操作集合 | Tensor operations、shape、semantics | [GitHub](https://github.com/openxla/stablehlo) |
+| Triton | **直接案例：** 提供面向 GPU 张量程序的多层 IR 与编译流程 | Triton IR、TTGIR、LLVM IR、PTX | [GitHub](https://github.com/triton-lang/triton) |
+
+学习 IR 时建议追踪同一个矩阵乘法在 StableHLO、MLIR、Triton IR 和 LLVM IR 中如何逐步改变表达形式。
