@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![GPU Occupancy 可视化](../images/05_Kernel_Optimization/04_Occupancy.svg)
 
-*图：Active Warps 占最大支持 Warp 数的比例即 Occupancy。寄存器或 Shared Memory 使用过多，会减少一个 SM 能同时驻留的 Block/Warps。*
 
 ### 2.2 数学原理与核心技术
 
