@@ -28,27 +28,27 @@ flowchart TD
 
 设变量 (u) 由方程定义：
 
-$
+$$
 F(u,\theta)=0.
-$
+$$
 
 假设在所考虑的解附近，(F) 对 (u) 可微且 Jacobian (F_u) 可逆。对参数 (	heta) 求微分：
 
-$
+$$
 F_u\frac{du}{d\theta}+F_\theta=0.
-$
+$$
 
 因此：
 
-$
+$$
 \boxed{\frac{du}{d\theta}=-F_u^{-1}F_\theta}
-$
+$$
 
 这就是隐函数定理给出的基本关系。实际计算通常不显式形成逆矩阵，而是求解线性系统：
 
-$
+$$
 F_u\frac{du}{d\theta}=-F_\theta.
-$
+$$
 
 若最终目标是标量损失 (L(u(\theta),\theta))，可进一步结合伴随方法，避免显式构造完整 Jacobian。
 
