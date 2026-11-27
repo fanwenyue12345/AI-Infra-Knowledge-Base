@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![07_Auto_Tuning 可视化](../images/06_Compiler_Optimization/07_Auto_Tuning.svg)
+
+*图：调优器不断提出配置、编译、验证和测量，再根据结果选择合法且性能较好的配置。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![Auto-Tuning 搜索过程](../images/06_Compiler_Optimization/07_Auto_Tuning.svg)
 
 *图：调优器从候选配置中选择参数，编译并运行 Kernel，测量性能后更新搜索方向；最终选择满足正确性要求且性能较好的配置。*
