@@ -14,6 +14,7 @@
 |---|---|
 | [01 — 八类高性能计算优化方法](01_Optimization_Methods.md) | 从算法、计算图、内存、并行、Kernel、编译器、数值精度到系统优化 |
 | [02 — 我们的研究记录](02_Our_Research_Notes.md) | ReWY 案例分析、个人理解、待验证问题与研究假设 |
+| [03 — Attention 算子研究知识库](03_Attention_Operators/README.md) | FLA、HiLS、FlashAttention 等算法、模型、算子与跨硬件适配 |
 
 ## 八类优化方向
 
