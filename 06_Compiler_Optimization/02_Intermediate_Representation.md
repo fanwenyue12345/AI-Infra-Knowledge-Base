@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![编译器多层 IR](../images/06_Compiler_Optimization/02_Intermediate_Representation.svg)
 
-*图：高层 IR 保留张量、算子等领域语义；中层 IR 显式表达循环和内存；低层 IR 更接近目标指令。不同编译器的 IR 层级与名称并不完全相同。*
 
 ### 2.2 数学原理与核心技术
 
