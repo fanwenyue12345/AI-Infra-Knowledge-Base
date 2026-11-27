@@ -1,39 +1,63 @@
 # KV Cache
 
-- **所属分类：** [08 系统与分布式优化](README.md)
-- **专题编号：** 07
-- **状态：** 待共同设计与编写
+**所属分类：** [08 系统与分布式优化](README.md)  
+**英文名称：** Key-Value Cache  
+**专题编号：** 07
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** KV Cache 是在自回归 Transformer 生成过程中缓存已经计算过的 Key 和 Value 张量，避免每生成一个新 Token 都重新计算历史 Token 的注意力键值。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 减少逐 Token 解码时对历史上下文的重复计算，以额外显存占用换取更低的解码延迟和更高吞吐。KV Cache 的容量管理是大模型推理系统的重要瓶颈。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？系统中存在什么瓶颈？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![KV Cache 自回归生成](../images/08_System_Optimization/07_KV_Cache.svg)
 
-待讨论：执行模型、公式、通信/存储机制、变量含义、适用条件和局限。
+*图：每一步只为新 Token 计算新的 K/V，并追加到历史缓存；Query 与历史 K/V 计算注意力，不必重新生成全部历史 K/V。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：框架、API、运行时、数据结构、部署流程和关键参数。
+对于某一层的因果自注意力：
 
-## 5. 经典项目与案例
+$$
+Q_t=X_tW_Q,\quad K_t=X_tW_K,\quad V_t=X_tW_V.
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+在生成第 $t$ 个 Token 时，Query $Q_t$ 与历史及当前 Key/Value 计算：
 
-## 6. 实验与性能验证
+$$
+O_t=\operatorname{softmax}
+\left(\frac{Q_tK_{\leq t}^{T}}{\sqrt{d_k}}\right)V_{\leq t}.
+$$
 
-待讨论：端到端吞吐、延迟、显存、通信开销、基线和测试条件。
+若不使用 KV Cache，每一步都可能重新计算历史 Token 的 K/V 投影；使用缓存后，只需计算新 Token 的 $K_t,V_t$ 并追加到缓存。
 
-## 7. 我们的理解与研究问题
+若模型有 $L$ 层、Batch 中有 $B$ 个序列、每层有 $H_{kv}$ 个 KV Heads、每个 Head 维度为 $d_h$、缓存长度为 $S$，每个元素占 $b$ Bytes，则忽略元数据时 KV Cache 大小近似为：
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+$$
+M_{KV}=2LBH_{kv}Sd_hb.
+$$
 
-## 参考资料
+系数 2 对应 Key 和 Value。若采用 GQA/MQA，$H_{kv}$ 可小于 Query Heads 数，从而降低缓存需求。
 
-待补充：优先使用原始论文、官方文档和项目源码。
+**核心技术：**
+- **Append-only Cache：** 每次生成新 Token，将其 K/V 追加到历史缓存。
+- **Paged KV Cache：** 将缓存切成固定大小 Block，按需分配，减少连续大块内存要求和碎片。
+- **Prefix Sharing：** 对共享 Prompt 前缀的请求复用部分 KV Cache，需正确管理引用与生命周期。
+- **KV Quantization：** 以低精度存储 K/V，减少显存，但需要验证注意力输出误差。
+- **Eviction / Offload：** 在显存紧张时管理缓存淘汰或卸载，需考虑重新计算和数据搬运成本。
+- **Cache Layout：** 设计 Block、Head 和 Token 维度的物理布局，影响访存合并与 Kernel 效率。
+
+KV Cache 不是越大越好：缓存长度、并发请求数和 KV Heads 数共同决定显存占用。系统需要在请求准入、缓存块分配、前缀复用和延迟目标之间权衡。
+
+## 03. 代表案例
+
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| vLLM PagedAttention | **经典直接案例：** 以分页式 KV Block 管理降低缓存碎片并支持高并发 | block table、KV block allocation、prefix caching | [GitHub](https://github.com/vllm-project/vllm) · [论文](https://arxiv.org/abs/2309.06180) |
+| TensorRT-LLM | **直接案例：** 提供 KV Cache 管理、分页和复用机制 | KV cache manager、reuse、quantization | [GitHub](https://github.com/NVIDIA/TensorRT-LLM) |
+| SGLang RadixAttention | **直接案例：** 通过 Radix Tree 管理和复用共享前缀 KV Cache | prefix tree、cache reuse、eviction | [GitHub](https://github.com/sgl-project/sglang) |
+| Hugging Face Transformers | **基础案例：** 在模型生成接口中维护 past_key_values | cache object、dynamic/static cache | [GitHub](https://github.com/huggingface/transformers) · [文档](https://huggingface.co/docs/transformers/main/en/kv_cache) |
