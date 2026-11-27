@@ -8,55 +8,49 @@
 
 **一句话定义：** 代码生成是编译器把优化后的中间表示转换为目标平台可执行代码的阶段，包括指令选择、寄存器分配、指令调度和目标文件生成。
 
-**核心目的：** 将抽象计算落实为目标 ISA 和硬件能够执行的指令，同时满足调用约定、寄存器、内存和设备执行模型等约束。
+**核心目的：** 将抽象计算落实为目标 ISA 和硬件能够执行的指令，同时满足调用约定、寄存器约束、内存模型和目标文件格式要求。它决定高层优化最终如何体现在机器指令上。
 
 ## 02. 数学原理与核心技术
 
 ### 2.1 可视化理解
 
-![08_Code_Generation 可视化](../images/06_Compiler_Optimization/08_Code_Generation.svg)
-
-*图：低层 IR 经指令选择、寄存器分配和指令调度，生成目标 ISA；CUDA 路径中 PTX 与 SASS 需要区分。*
-
-### 2.2 数学原理与核心技术
-
-### 2.1 可视化理解
-
 ![代码生成过程](../images/06_Compiler_Optimization/08_Code_Generation.svg)
 
-*图：低层 IR 经过指令选择、寄存器分配和指令调度，生成目标汇编或机器码。GPU 编译链还可能经过 PTX、目标机器码等设备相关阶段。*
+*图：优化后的 IR 经指令选择和寄存器分配，再进行指令调度与汇编/链接，形成目标设备可执行代码。具体阶段顺序依编译器而异。*
 
 ### 2.2 数学原理与核心技术
 
-代码生成需要将 IR 操作映射到目标指令集合。对于表达式：
+例如高层运算：
 
 $$
-c=a\times b+d,
+y=a\times b+c
 $$
 
-目标架构若支持 FMA，编译器可能将乘法和加法映射为融合乘加指令：
+在支持 FMA 的目标平台上，可能被选择为融合乘加指令：
 
 $$
-c=\operatorname{fma}(a,b,d).
+y=\operatorname{fma}(a,b,c).
 $$
 
-该变换是否允许还取决于浮点语义和编译选项。
+这可能改变舍入路径，因此是否允许融合还取决于浮点语义和编译选项。
 
 **核心技术：**
-- **Instruction Selection：** 将 IR 操作匹配到目标指令。
-- **Register Allocation：** 将活跃变量分配到有限寄存器，必要时 Spill。
-- **Instruction Scheduling：** 在依赖约束下重排指令，改善流水执行和延迟隐藏。
-- **Peephole Optimization：** 在局部指令窗口中识别并替换低效模式。
-- **Assembly / Machine Code Emission：** 输出汇编、目标文件或设备机器码。
-- **Linking：** 将目标文件、库和运行时依赖组合成可执行产物。
+- **Instruction Selection：** 将 IR 操作映射到目标 ISA 指令或指令序列。
+- **Register Allocation：** 将虚拟寄存器分配到有限的物理寄存器；溢出时可能插入 Spill/Reload。
+- **Instruction Scheduling：** 在依赖和资源约束下安排指令顺序，以改善流水线利用。
+- **Machine-Level Optimization：** 在机器 IR 层进行窥孔优化、指令合并和冗余消除。
+- **Assembly / Object Emission：** 生成汇编、目标文件或设备代码。
+- **Linking：** 解析符号和外部依赖，形成可加载的程序或模块。
 
-GPU 开发中需要区分 PTX 与 SASS：PTX 是 NVIDIA 的虚拟 ISA/中间汇编形式，最终还需由后端生成具体 GPU 架构的机器指令；不同架构的指令和资源特征可能不同。
+代码生成并不是简单选择“最少指令”。指令延迟、吞吐、寄存器压力、访存行为和硬件专用单元都会影响最终性能。
 
 ## 03. 代表案例
 
 | 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
 |---|---|---|---|
-| LLVM CodeGen | **直接案例：** 从 LLVM IR 生成目标机器指令 | SelectionDAG、GlobalISel、register allocation | [GitHub](https://github.com/llvm/llvm-project) · [文档](https://llvm.org/docs/CodeGenerator.html) |
-| NVIDIA PTX ISA | **权威资料：** 描述 GPU 虚拟 ISA 与指令语义 | PTX instructions、memory model、MMA | [官方文档](https://docs.nvidia.com/cuda/parallel-thread-execution/) |
-| CUDA Compiler Toolchain | **直接案例：** 将 CUDA C++ 编译为 PTX 并生成设备机器码 | nvcc、ptxas、fatbinary、SASS | [CUDA 文档](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/) |
-| MLIR LLVM Dialect | **关联案例：** 将较高层 IR 转换为 LLVM IR，接入 LLVM 后端 | LLVM IR translation、conversion passes | [MLIR 文档](https://mlir.llvm.org/) |
+| LLVM CodeGen | **直接案例：** 从 LLVM IR 到 Machine IR、汇编与目标文件 | instruction selection、register allocation、MC layer | [GitHub](https://github.com/llvm/llvm-project) · [LLVM Code Generator](https://llvm.org/docs/CodeGenerator.html) |
+| NVIDIA PTX / NVCC | **直接案例：** CUDA C++ 经编译生成 PTX，再由工具链生成 GPU 机器代码 | PTX ISA、ptxas、SASS inspection | [PTX 文档](https://docs.nvidia.com/cuda/parallel-thread-execution/) · [CUDA 文档](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/) |
+| Triton | **直接案例：** Triton Kernel 经多层 IR 降低并生成 PTX/目标代码 | LLVM backend、PTX generation | [GitHub](https://github.com/triton-lang/triton) |
+| MLIR | **关联案例：** 通过目标 Dialect 转换和 LLVM IR 连接后端代码生成 | LLVM Dialect、translation、target lowering | [MLIR 文档](https://mlir.llvm.org/) |
+
+如果要研究一个 Kernel 为什么生成了某条指令、为什么出现 Spill，最终需要查看编译器输出的 PTX、SASS 或机器级 IR，而不能只看 Python 层代码。
