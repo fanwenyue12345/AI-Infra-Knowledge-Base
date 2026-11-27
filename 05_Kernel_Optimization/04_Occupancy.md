@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![04_Occupancy 可视化](../images/05_Kernel_Optimization/04_Occupancy.svg)
+
+*图：图中用 4 个槽位表示最大可驻留 Warp 数；实际驻留 2 个时 Occupancy 为 50%，驻留 4 个时为 100%。高 Occupancy 不必然更快。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![GPU Occupancy 可视化](../images/05_Kernel_Optimization/04_Occupancy.svg)
 
 *图：Active Warps 占最大支持 Warp 数的比例即 Occupancy。寄存器或 Shared Memory 使用过多，会减少一个 SM 能同时驻留的 Block/Warps。*
