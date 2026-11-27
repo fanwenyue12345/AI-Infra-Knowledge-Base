@@ -20,7 +20,6 @@
 
 *图源：PyTorch Autograd 学习笔记。展示叶子张量、前向运算节点、saved tensors 与反向节点之间的依赖关系。参见[原始说明](https://bkkhyunn.github.io/deep_learning/torch/torch_5/)。*
 
-*图：前向图计算 a=x+y、z=a² 和损失；反向图沿依赖反向传播梯度，并在分支汇合处累加贡献。*
 
 ### 2.2 数学原理与核心技术
 
