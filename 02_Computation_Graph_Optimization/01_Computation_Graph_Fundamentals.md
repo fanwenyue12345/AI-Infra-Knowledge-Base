@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![OpenXLA HLO graph visualization](https://openxla.org/static/xprof/images/trace_viewer_to_hlo_graph_2.png)
+![01_Computation_Graph_Fundamentals 可视化](../images/02_Computation_Graph_Optimization/01_Computation_Graph_Fundamentals.svg)
+
+*相关成熟资料：OpenXLA XProf Trace Viewer 文档，详见[原始链接](https://openxla.org/xprof/trace_viewer)。*
 
 *图源：OpenXLA XProf 官方文档。展示实际 HLO 图中的算子、张量边和融合区域。参见[官方 Trace Viewer 文档](https://openxla.org/xprof/trace_viewer)。*
 
