@@ -8,56 +8,54 @@
 
 **一句话定义：** Auto-Tuning 是自动搜索 Kernel 或计算程序的配置参数与实现策略，并根据目标硬件上的测量结果选择性能较好的方案。
 
-**核心目的：** 减少人工试错，在不同输入形状、数据类型和硬件上寻找合适的 Tile 大小、Warp 数、流水级数、算法和代码变体。自动调优是搜索与测量过程，不等同于编译器静态优化。
+**核心目的：** 减少人工试错，在不同输入形状、数据类型和硬件上找到合适的 Tile、线程配置、流水阶段或算法实现。自动调优本质上是一个受约束的搜索与测量过程，不等同于编译器常规的静态优化。
 
 ## 02. 数学原理与核心技术
 
 ### 2.1 可视化理解
 
-![07_Auto_Tuning 可视化](../images/06_Compiler_Optimization/07_Auto_Tuning.svg)
+![Auto-Tuning 搜索流程](../images/06_Compiler_Optimization/07_Auto_Tuning.svg)
 
-*图：调优器不断提出配置、编译、验证和测量，再根据结果选择合法且性能较好的配置。*
-
-### 2.2 数学原理与核心技术
-
-### 2.1 可视化理解
-
-![Auto-Tuning 搜索过程](../images/06_Compiler_Optimization/07_Auto_Tuning.svg)
-
-*图：调优器从候选配置中选择参数，编译并运行 Kernel，测量性能后更新搜索方向；最终选择满足正确性要求且性能较好的配置。*
+*图：调优器生成候选配置，编译并在目标硬件上测量，通过正确性和性能筛选保留较优方案。实际系统还可能使用缓存、剪枝或机器学习模型减少搜索成本。*
 
 ### 2.2 数学原理与核心技术
 
-设配置参数为：
+设配置空间为 $\mathcal C$，目标硬件为 $H$，输入工作负载为 $X$，调优目标可以写成：
 
 $$
-\theta=(B_M,B_N,B_K,n_{warps},n_{stages},\ldots).
+c^*=\arg\min_{c\in\mathcal C}T(c;H,X),
 $$
 
-自动调优可写成优化问题：
+其中 $T$ 是候选配置的实测执行时间。候选配置必须满足正确性、资源和精度约束：
 
 $$
-\theta^*=\arg\min_{\theta\in\Theta}T(\theta),
+c\in\mathcal C_{valid}.
 $$
 
-其中 $\Theta$ 是候选配置集合，$T(\theta)$ 是指定输入与硬件上测得的执行时间。实际搜索还必须满足正确性、显存和资源限制等约束。
+因此实际问题是：
+
+$$
+c^*=\arg\min_{c\in\mathcal C_{valid}}T(c;H,X).
+$$
 
 **核心技术：**
-- **Search Space：** 定义可调参数及其合法取值。
-- **Grid Search：** 穷举有限候选配置，简单但成本可能很高。
-- **Random Search：** 随机采样配置，适合高维搜索空间。
-- **Bayesian Optimization：** 根据已测样本建立代理模型，选择有潜力的新配置。
-- **Evolutionary Search：** 通过变异、选择等方式探索候选方案。
-- **Cost Model：** 用解析模型或学习模型预测配置成本，减少真实测量次数。
-- **Correctness Validation：** 对候选配置先验证数值正确性，再比较性能。
+- **Search Space：** 定义 Tile 尺寸、Warp 数、Stages、算法路径等可调参数。
+- **Grid Search：** 枚举候选配置，简单但搜索成本可能很高。
+- **Random / Bayesian Search：** 用随机采样或代理模型减少试验数量。
+- **Cost Model：** 在真实运行前估计候选性能，用于筛选或排序。
+- **Measurement：** 进行预热、重复计时、同步和统计，控制测量噪声。
+- **Autotune Cache：** 缓存某种硬件与输入形状下的最佳配置，避免重复搜索。
+- **Correctness Validation：** 每个候选都应先通过数值正确性和必要的精度验证。
 
-调优结果可能过拟合某个输入形状或设备。应明确测试分布、重复次数、预热和计时方式，并考虑编译时间与缓存影响。
+自动调优结果通常与 GPU 型号、驱动、编译器版本、输入 Shape 和数据类型绑定。只报告某个配置的最快一次测量并不可靠，应使用稳定的统计方法并保留正确性约束。
 
 ## 03. 代表案例
 
 | 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
 |---|---|---|---|
-| Triton Autotune | **直接案例：** 通过配置列表和性能测量选择 Kernel 参数 | Config、num_warps、num_stages、key | [GitHub](https://github.com/triton-lang/triton) · [文档](https://triton-lang.org/main/python-api/generated/triton.autotune.html) |
-| TVM MetaSchedule | **直接案例：** 通过搜索和成本模型自动优化 TensorIR 程序 | Search Strategy、Cost Model、Measure Candidate | [GitHub](https://github.com/apache/tvm) |
-| Ansor | **经典研究案例：** 自动生成并搜索张量程序调度 | hierarchical search、task scheduler、cost model | [论文](https://arxiv.org/abs/2006.06762) |
-| OpenTuner | **通用工具：** 面向软件配置参数的自动搜索框架 | search techniques、measurement interface | [GitHub](https://github.com/jansel/opentuner) |
+| TVM Ansor | **经典直接案例：** 基于搜索和成本模型自动优化张量程序 | Search space、program sampling、cost model | [GitHub](https://github.com/apache/tvm) · [论文](https://arxiv.org/abs/2006.06762) |
+| Triton | **直接案例：** 通过 autotune 配置搜索 Kernel 参数 | Config、key、num_warps、num_stages | [GitHub](https://github.com/triton-lang/triton) · [教程](https://triton-lang.org/main/python-api/generated/triton.autotune.html) |
+| OpenTuner | **直接案例：** 通用自动调优框架 | 多种搜索技术、参数配置空间 | [GitHub](https://github.com/jansel/opentuner) |
+| CUTLASS Profiler | **直接工具：** 枚举并测量 GEMM Kernel 配置 | tile shape、data type、split-K、throughput | [GitHub](https://github.com/NVIDIA/cutlass) |
+
+建议区分“编译器静态优化”和“基于目标设备实测的自动调优”：前者主要分析程序，后者需要执行候选并测量真实性能。
