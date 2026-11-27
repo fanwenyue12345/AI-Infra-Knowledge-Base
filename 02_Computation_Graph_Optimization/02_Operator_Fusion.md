@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![TorchInductor pre-fusion and post-fusion IR](https://karthick.ai/assets/img/blog_lbd-2/pre_post.png)
+![02_Operator_Fusion 可视化](../images/02_Computation_Graph_Optimization/02_Operator_Fusion.svg)
+
+*相关成熟资料：TorchInductor reduction kernel 融合案例，详见[原始链接](https://karthick.ai/blog/2025/Learn-By-Doing-Torchinductor-Reduction/)。*
 
 *图源：TorchInductor reduction kernel 技术文章。展示多个 reduction / pointwise 操作融合前后的 IR 结构。参见[原始文章](https://karthick.ai/blog/2025/Learn-By-Doing-Torchinductor-Reduction/)。*
 
