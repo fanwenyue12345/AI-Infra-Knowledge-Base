@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![08_Pipelining 可视化](../images/05_Kernel_Optimization/08_Pipelining.svg)
+
+*图：双缓冲让当前 Tile 的计算与下一 Tile 的预取交叠。实际重叠取决于异步搬运能力、同步依赖和资源竞争。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![Kernel 流水线](../images/05_Kernel_Optimization/08_Pipelining.svg)
 
 *图：单缓冲执行时加载和计算阶段串行；多缓冲流水线中，计算当前 Tile 的同时可预取下一 Tile。真实重叠程度取决于硬件、依赖和资源。*
