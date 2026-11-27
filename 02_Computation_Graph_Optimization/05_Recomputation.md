@@ -1,40 +1,50 @@
 # 重计算
 
-- **所属分类：** [02 计算图优化](README.md)
-- **英文分类：** Computation Graph Optimization
-- **专题编号：** 05
-- **状态：** 待共同设计与编写
+**所属分类：** [02 计算图优化](README.md)  
+**英文名称：** Recomputation / Rematerialization  
+**专题编号：** 05
 
-> 本文件先建立专题位置和统一写作框架。具体定义、理论推导、工程实现和案例将在后续讨论确认后逐步补充。
+## 01. 一句话定义与核心目的
 
-## 1. 快速理解
+**一句话定义：** 重计算是在某些中间结果不再保存、需要时再重新执行生成它的计算，以减少中间数据的存储和生命周期。
 
-待补充：一句话定义、解决的问题、核心结论和示意图。
+**核心目的：** 用额外计算换取更低的峰值内存占用，尤其用于深度学习训练中减少需要为反向传播长期保存的激活值。它也称为 Rematerialization；Activation Checkpointing 是训练中常见的实现策略之一。
 
-## 2. 背景与问题
+## 02. 数学原理与核心技术
 
-待讨论：该技术为什么出现？此前的瓶颈或困难是什么？
+### 2.1 可视化理解
 
-## 3. 核心原理与理论基础
+![重计算可视化](../images/02_Computation_Graph_Optimization/05_Recomputation.svg)
 
-待讨论：关键概念、公式、推导、变量含义、适用条件和局限。
+*图：普通训练保存所有层的激活；Checkpointing 只保存部分检查点，在反向阶段重新计算区间内的激活，以计算换取显存。*
 
-## 4. 工程实现
+### 2.2 数学原理与核心技术
 
-待讨论：软件栈、数据结构、硬件机制、实现流程和关键参数。
+设网络由若干层组成：
 
-## 5. 经典项目与案例
+$$
+h_{l+1}=f_l(h_l;\theta_l).
+$$
 
-待补充：代表性论文、开源项目、源码位置，以及它们如何使用本专题技术。
+普通反向传播通常需要保存部分前向激活 $h_l$，以便计算梯度。若保存所有激活，内存需求可能随网络深度、批量和序列长度增长。
 
-## 6. 实验与性能验证
+Checkpointing 可以只保存部分检查点。反向传播到某个区间时，从最近的检查点重新执行前向计算，重建区间内需要的激活，再计算梯度。
 
-待讨论：验证方法、指标、基线、测试条件和结果解释。
+**核心技术：**
+- **Activation Checkpointing：** 只保存选定层或区间的激活，反向时重新运行对应前向片段。
+- **Selective Checkpointing：** 根据操作成本、内存大小或策略选择哪些中间值保存、哪些重算。
+- **Rematerialization：** 编译器或运行时分析值的生命周期，决定重新计算比保存更合适的节点。
+- **Checkpoint Scheduling：** 决定检查点位置与重算区间，在峰值内存和额外计算之间折中。
+- **Recompute vs. Store：** 对每个中间结果比较存储成本、重算成本和依赖关系。
 
-## 7. 我们的理解与研究问题
+重计算要求重新执行的计算在语义上可安全复现。随机数、Dropout、状态更新和外部副作用需要正确处理；重算也会增加计算时间，甚至可能因额外 Kernel Launch 或通信而降低吞吐。
 
-待记录：个人理解、尚未解决的问题、可验证假设和潜在研究方向。
+## 03. 代表案例
 
-## 参考资料
+| 项目 | 与本专题的关系 | 值得关注的内容 | 项目与资料 |
+|---|---|---|---|
+| PyTorch Activation Checkpointing | **直接案例：** 前向不保留指定区域的全部中间激活，反向时重跑该区域 | `torch.utils.checkpoint`、非重入实现、选择性 checkpoint | [GitHub 源码](https://github.com/pytorch/pytorch/blob/main/torch/utils/checkpoint.py) · [官方文档](https://docs.pytorch.org/docs/stable/checkpoint.html) |
+| OpenXLA HLO Rematerialization | **直接案例：** 编译器在 HLO 图中选择性重算表达式以降低内存压力 | HloRematerialization、值生命周期与内存规划 | [GitHub](https://github.com/openxla/xla) · [HLO Passes](https://openxla.org/xla/hlo_passes) |
+| DeepSpeed | **关联案例：** 训练内存优化工具中提供 activation checkpointing 等机制 | 大模型训练中的激活内存与重算策略 | [GitHub](https://github.com/deepspeedai/DeepSpeed) · [文档](https://deepspeed.readthedocs.io/) |
 
-待补充：优先使用原始论文、官方文档和项目源码。
+PyTorch 文档说明 checkpointing 以额外计算换取较低激活内存，并提示随机状态处理与重算一致性等注意事项。
