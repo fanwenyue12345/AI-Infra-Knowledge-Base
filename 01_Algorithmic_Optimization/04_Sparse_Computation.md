@@ -16,10 +16,6 @@
 
 ![04_Sparse_Computation 可视化](../images/01_Algorithmic_Optimization/04_Sparse_Computation.svg)
 
-*相关成熟资料：NVIDIA NVPL Sparse 的 CSR 存储格式说明，详见[原始链接](https://docs.nvidia.com/nvpl/latest/sparse/storage_format/sparse_matrix.html)。*
-
-*图源：NVIDIA NVPL Sparse 官方文档。展示稠密矩阵中的非零元素如何映射到 CSR 的 row offsets、column indices 与 values。参见[NVIDIA 原始文档](https://docs.nvidia.com/nvpl/latest/sparse/storage_format/sparse_matrix.html)。*
-
 *图：左侧用蓝色单元标出 4×4 矩阵的非零元素；中间列出其坐标和值；右侧给出 COO 的 row、col、data 三个数组。该例有 3 个非零值，稀疏格式还需要额外索引存储。*
 
 ### 2.2 数学原理与核心技术
@@ -28,6 +24,19 @@
 若矩阵 $A\in\mathbb R^{m\times n}$ 只有 $nnz$ 个非零元素，稠密存储需要保存 $mn$ 个数；稀疏表示则只保存非零值及其位置。
 
 稠密矩阵向量乘法约需 $2mn$ FLOPs；稀疏矩阵向量乘法约需 $2nnz$ FLOPs，另有索引读取和不规则访存成本。
+
+若数值占用 $b_v$ Bytes、索引占用 $b_i$ Bytes，则常见存储量近似为：
+
+$
+M_{dense}=mn b_v,\qquad
+M_{COO}=nnz(b_v+2b_i),
+$
+
+$
+M_{CSR}=nnz(b_v+b_i)+(m+1)b_i.
+$
+
+其中 COO 为每个非零元素保存行、列两个索引；CSR 额外保存 $m+1$ 个行指针。实际格式还可能有对齐、索引宽度和分块元数据开销。
 
 核心技术：
 - **CSR（Compressed Sparse Row）：** 按行存储非零值、列索引和行指针。
