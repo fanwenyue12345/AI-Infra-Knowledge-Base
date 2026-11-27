@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![序列并行切分](../images/04_Parallelism_Optimization/06_Sequence_Parallelism.svg)
 
-*图：序列维度被切成多个片段分配给不同设备；某些操作可在本地 Token 分片上执行，跨 Token 依赖的操作则需要通信或特定并行算法。*
 
 ### 2.2 数学原理与核心技术
 
