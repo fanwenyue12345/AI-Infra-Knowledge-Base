@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![02_Thread_Warp_Block_SM 可视化](../images/05_Kernel_Optimization/02_Thread_Warp_Block_SM.svg)
+
+*图：一个 Block 包含多个 Warp，每个 Warp 包含多个 Thread；SM 可同时驻留多个 Block，数量受寄存器、共享内存和架构上限约束。图中以 64-thread Block 为例。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![Thread Warp Block SM 层级](../images/05_Kernel_Optimization/02_Thread_Warp_Block_SM.svg)
 
 *图：多个 Thread 组成 Warp，多个 Warp 组成 Block/CTA；一个 SM 可同时驻留多个 Block，具体数量受寄存器、共享内存和线程上限约束。*
