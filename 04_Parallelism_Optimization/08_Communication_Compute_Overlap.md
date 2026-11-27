@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![通信与计算重叠时间线](../images/04_Parallelism_Optimization/08_Communication_Compute_Overlap.svg)
 
-*图：当一部分梯度已经就绪时，可以启动对应 AllReduce，同时继续计算其他层的梯度。橙色通信区间与蓝色计算区间重叠；实际可隐藏的时间受依赖和资源竞争影响。*
 
 ### 2.2 数学原理与核心技术
 
