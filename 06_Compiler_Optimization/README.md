@@ -2,21 +2,21 @@
 
 **Compiler Optimization**
 
-本目录研究编译器如何分析、变换和生成适合目标硬件的执行代码。专题内容将在后续逐项讨论后完善。
+本目录研究编译器如何通过 IR、Lowering、图变换、布局优化、自动调优和代码生成，将高级计算映射为目标硬件可执行程序。九篇专题已建立第一轮内容初稿。
 
 ## 专题索引
 
 | 编号 | 专题 | 状态 |
 |---:|---|---|
-| 1 | [Compiler 基础](01_Compiler_Fundamentals.md) | 待共同设计 |
-| 2 | [中间表示（IR）](02_Intermediate_Representation.md) | 待共同设计 |
-| 3 | [Lowering（逐层降低）](03_Lowering.md) | 待共同设计 |
-| 4 | [图编译](04_Graph_Compilation.md) | 待共同设计 |
-| 5 | [编译器算子融合](05_Compiler_Operator_Fusion.md) | 待共同设计 |
-| 6 | [Layout Transformation（布局变换）](06_Layout_Transformation.md) | 待共同设计 |
+| 1 | [Compiler 基础](01_Compiler_Fundamentals.md) | 已建立初稿 |
+| 2 | [中间表示（IR）](02_Intermediate_Representation.md) | 已建立初稿 |
+| 3 | [Lowering（逐层降低）](03_Lowering.md) | 已建立初稿 |
+| 4 | [图编译](04_Graph_Compilation.md) | 已建立初稿 |
+| 5 | [编译器算子融合](05_Compiler_Operator_Fusion.md) | 已建立初稿 |
+| 6 | [Layout Transformation（布局变换）](06_Layout_Transformation.md) | 已建立初稿 |
 | 7 | [Auto-Tuning（自动调优）](07_Auto_Tuning.md) | 已建立初稿 |
-| 8 | [代码生成](08_Code_Generation.md) | 待共同设计 |
-| 9 | [跨硬件编译](09_Cross_Hardware_Compilation.md) | 待共同设计 |
+| 8 | [代码生成](08_Code_Generation.md) | 已建立初稿 |
+| 9 | [跨硬件编译](09_Cross_Hardware_Compilation.md) | 已建立初稿 |
 
 ## 统一专题写作与可视化规范
 
