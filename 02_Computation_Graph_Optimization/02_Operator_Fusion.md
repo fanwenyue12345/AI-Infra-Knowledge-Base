@@ -14,7 +14,9 @@
 
 ### 2.1 可视化理解
 
-![算子融合可视化](../images/02_Computation_Graph_Optimization/02_Operator_Fusion.svg)
+![TorchInductor pre-fusion and post-fusion IR](https://karthick.ai/assets/img/blog_lbd-2/pre_post.png)
+
+*图源：TorchInductor reduction kernel 技术文章。展示多个 reduction / pointwise 操作融合前后的 IR 结构。参见[原始文章](https://karthick.ai/blog/2025/Learn-By-Doing-Torchinductor-Reduction/)。*
 
 *图：未融合路径将中间张量 t 写出后再读取；融合路径在一个 Kernel 中完成逐元素加法和 ReLU，减少中间张量流量与启动开销。*
 
