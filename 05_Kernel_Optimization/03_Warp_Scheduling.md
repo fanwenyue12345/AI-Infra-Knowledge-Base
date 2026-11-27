@@ -22,9 +22,7 @@
 
 ### 2.1 可视化理解
 
-![Warp 调度与延迟隐藏](../images/05_Kernel_Optimization/03_Warp_Scheduling.svg)
 
-*图：Warp 0 等待数据时，调度器可选择 Warp 1 或 Warp 2 发射指令。只有处于就绪状态的 Warp 才能被调度；增加驻留 Warp 有助于隐藏延迟，但不保证所有等待都能被覆盖。*
 
 ### 2.2 数学原理与核心技术
 
