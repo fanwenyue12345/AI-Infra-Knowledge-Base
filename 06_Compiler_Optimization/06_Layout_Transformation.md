@@ -14,6 +14,14 @@
 
 ### 2.1 可视化理解
 
+![06_Layout_Transformation 可视化](../images/06_Compiler_Optimization/06_Layout_Transformation.svg)
+
+*图：逻辑矩阵相同，但行主序和列主序的地址映射不同；GPU 还需要决定元素由哪个线程持有。*
+
+### 2.2 数学原理与核心技术
+
+### 2.1 可视化理解
+
 ![Layout Transformation](../images/06_Compiler_Optimization/06_Layout_Transformation.svg)
 
 *图：同一逻辑矩阵可按行主序或列主序存储，也可按不同线程布局分配元素。逻辑索引不变，物理地址与线程所有权改变。*
